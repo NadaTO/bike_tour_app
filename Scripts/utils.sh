@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# in this shell script, only idempotent assignments of shell variables for
+# the Java class-path
+
 export MAVEN_REPOS=${HOME}/.m2/repository
 
 export PATHSEP=':'
