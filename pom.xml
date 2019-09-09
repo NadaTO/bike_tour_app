@@ -217,8 +217,8 @@ You need JDK8
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</message>
                 </requireJavaVersion>
                 <requireMavenVersion>
-                  <version>3.5.0</version>
-                  <message>You need Maven 3.5.0 or later</message>
+                  <version>3.0.4</version>
+                  <message>You need Maven 3.0.4 or later</message>
                 </requireMavenVersion>
               </rules>
             </configuration>
@@ -358,7 +358,7 @@ You need JDK8
     <module>vlibtour-tour-management</module>
     <module>vlibtour-lobby-room-system</module>
     <module>vlibtour-client</module>
-    <!-- <module>vlibtour-bikestation</module> -->
+    <module>vlibtour-bikestation</module>
     <module>vlibtour-emulation-visit</module>
     <module>vlibtour-scenario</module>
   </modules>
