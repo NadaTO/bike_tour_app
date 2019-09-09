@@ -6,7 +6,7 @@ if ! $(java -version 2>&1 | head -1 | grep '\"1\.8' > /dev/null); then
     exit 1
 fi
 
-. $(cd $(dirname $0) && pwd)/utils.sh
+. "$(cd $(dirname "$0") && pwd)"/utils.sh
 
 ARGS=$*
 

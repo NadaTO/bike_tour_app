@@ -172,6 +172,9 @@ public class VLibTourVisitTouristApplication {
 					+ client.getClass().getCanonicalName() + " is launched from directory "
 					+ "./vlibtour-scenario/src/main/resources/osm-mapnik/");
 		}
+		if (client == null) {
+			throw new UnsupportedOperationException("No implemented, yet");
+		}
 		client.map = Optional.of(MapHelper.createMapWithCenterAndZoomLevel(
 				"./vlibtour-scenario/src/main/resources/osm-mapnik/", 48.851412, 2.343166, 14));
 		Font font = new Font("name", Font.BOLD, 20);
