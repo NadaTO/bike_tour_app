@@ -20,7 +20,7 @@ The Maven modules are the following ones,
 mainly in the order of their compilation:
 - root: the VLibTour project;
 - vlibtour-libraries: the libraries for VLibTour:
-  - Geocalc: external libraries withour any Maven repository, thus explaining
+  - Geocalc: external libraries without any Maven repository, thus explaining
     why the source code is included here;
   - vlibtour-common: the VLibTour library for common classes;
 - vlibtour-tour-management: The VLibTour Tour Management (EJB technology):
