@@ -90,8 +90,7 @@ Contributor(s): Denis Conan
 	      <goal>java</goal>
 	    </goals>
 	    <configuration>
-	      <mainClass>vlibtour_emulation_visit.VisitEmulationTestClient</mainClass>
-	      <!-- <mainClass>vlibtour.vlibtour_bikestation.client.BikeStationClient</mainClass> -->
+	      <mainClass>vlibtour.vlibtour_emulation_visit.VisitEmulationTestClient</mainClass>
 	    </configuration>
 	  </execution>
 	</executions>

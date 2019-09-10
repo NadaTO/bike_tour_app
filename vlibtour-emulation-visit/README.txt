@@ -15,3 +15,16 @@ of the REST server---i.e., getNextPOIPosition, getCurrentPosition,
 stepInCurrentPath, stepsInVisit. Please refer to Javadoc class
 documentation and the JUnit test classes to learn how to use this
 module.
+
+The code of this module is complete. We thus provide some code to test the
+server:
+(1) as JUnit test (vlibtour.vlibtour_emulation_visit.TestScenario), and
+(2) a pseudo-client class with a main
+    (vlibtour.vlibtour_emulation_visit.VisitEmulationTestClient).
+Thus, you can execute the following commands:
+$ mvn clean install # it includes the execution of the JUnit test.
+$ mvn exec:java@server
+# wait for the line
+# Jersey app started with WADL available at http://localhost:8888/VisitEmulation/application.wadl
+# the following command in another terminal
+$ mvn exec:java@client
