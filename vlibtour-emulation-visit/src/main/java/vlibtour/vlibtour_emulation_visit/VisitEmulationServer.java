@@ -52,13 +52,26 @@ import vlibtour.vlibtour_visit_emulation.Position;
 /**
  * This class provides utility methods for the visit of tourists. You are free
  * to complement or modify this code.
- * 
+ * <p>
  * The data structures are designed to allow the management of the visit of
  * several users.
- * 
+ * <p>
  * A limitation of the current implementation is that there is only one graph of
  * positions. The limitation is imposed by the usage of the class
  * {@link vlibtour.vlibtour_emulation_visit.GraphOfPositionsForEmulation}.
+ * <p>
+ * A regular usage of this server is as follows:
+ * <ul>
+ * <li>{@code getCurrentPosition}: to know where a user is;</li>
+ * <li>{@code getNextPOIPosition}: to know the position of the next POI, i.e.
+ * the end of current path of a user;</li>
+ * <li>{@code stepInCurrentPath}: to move to the next position in the current
+ * path of a user. When a user is at the end of their path, stepInCurrentPath
+ * returns the same position;</li>
+ * <li>{@code stepsInVisit}: this calls is used when a user is at their POI in
+ * order to know the position of the next POI in the visit. When a user is at
+ * the end of their visit, stepsInVisit returns the same position.</li>
+ * </ul>
  * 
  * @author Denis Conan
  */
@@ -143,8 +156,7 @@ public final class VisitEmulationServer {
 		final HttpServer server = GrizzlyHttpServerFactory
 				.createHttpServer(URI.create(ExampleOfAVisitWithTwoTourists.BASE_URI_WEB_SERVER), rc);
 		if (LOG_ON && EMULATION.isInfoEnabled()) {
-			EMULATION.info(String.format(
-					"Jersey app started with WADL available at " + "%sapplication.wadl",
+			EMULATION.info(String.format("Jersey app started with WADL available at " + "%sapplication.wadl",
 					ExampleOfAVisitWithTwoTourists.BASE_URI_WEB_SERVER));
 		}
 		while (true) {
@@ -168,7 +180,7 @@ public final class VisitEmulationServer {
 	 */
 	static Map<Position, Set<Position>> initTourWithPOIs() {
 		// creation of the positions
-            	Position p01 = new Position(String.valueOf(1), new GPSPosition(48.869301, 2.3450524), "Musée Pooja Namo");
+		Position p01 = new Position(String.valueOf(1), new GPSPosition(48.869301, 2.3450524), "Musée Pooja Namo");
 		Position p02 = new Position(String.valueOf(2), new GPSPosition(48.8528621, 2.3209537),
 				"Galeries Lafayette Haussmann");
 		Position p03 = new Position(String.valueOf(3), new GPSPosition(48.8634926, 2.3218978), "Place Saint Augustin");
@@ -322,8 +334,9 @@ public final class VisitEmulationServer {
 	}
 
 	/**
-	 * steps to the next position in the current path. It returns the new position
-	 * of the user, or the same if the end of the path is already reached.
+	 * steps to the next position in the current path---i.e. towards the next POI.
+	 * It returns the new position of the user, or the same if the end of the path
+	 * is already reached.
 	 * 
 	 * @param user the identifier of the user.
 	 * @return the new position of the user, or the same if the end of the path is
@@ -340,7 +353,7 @@ public final class VisitEmulationServer {
 	// the other methods of the API
 
 	/**
-	 * steps in the visit, that is computed in the path to the next POI.
+	 * when at a POI, steps in the visit---i.e. computes the path to the next POI.
 	 * 
 	 * @param user the identifier of the user.
 	 * @return the next position.
