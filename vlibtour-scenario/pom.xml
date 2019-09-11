@@ -102,6 +102,30 @@ Contributor(s):
 	      <mainClass>vlibtour.vlibtour_client_scenario.map_viewer.MapDemo</mainClass>
 	    </configuration>
 	  </execution>
+	  <execution>
+	    <id>touristapplijoe</id>
+	    <goals>
+	      <goal>java</goal>
+	    </goals>
+	    <configuration>
+	      <mainClass>vlibtour.vlibtour_client_scenario.VLibTourVisitTouristApplication</mainClass>
+              <arguments>
+                <argument>Joe</argument>
+              </arguments>
+	    </configuration>
+	  </execution>
+	  <execution>
+	    <id>touristappliavrel</id>
+	    <goals>
+	      <goal>java</goal>
+	    </goals>
+	    <configuration>
+	      <mainClass>vlibtour.vlibtour_client_scenario.VLibTourVisitTouristApplication</mainClass>
+              <arguments>
+                <argument>Avrel</argument>
+              </arguments>
+	    </configuration>
+	  </execution>
 	</executions>
       </plugin>
     </plugins>
