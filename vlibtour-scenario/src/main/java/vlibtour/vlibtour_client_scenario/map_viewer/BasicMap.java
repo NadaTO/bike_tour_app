@@ -32,7 +32,9 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -164,7 +166,9 @@ public class BasicMap extends JFrame implements JMapViewerEventListener {
 		map().setTileLoader(new OsmTileLoader(map()));
 		final int zoomLevel = 14;
 		map().setTileSource(new OfflineOsmTileSource(
-				(new File("src/main/resources/osm-mapnik/").toURI().toURL()).toString(), zoomLevel, zoomLevel));
+				Thread.currentThread().getContextClassLoader().getResource("osm-mapnik/").toString(), zoomLevel, zoomLevel));
+//		map().setTileSource(new OfflineOsmTileSource(
+//				(new File("src/main/resources/osm-mapnik/").toURI().toURL()).toString(), zoomLevel, zoomLevel));
 
 		map().setMapMarkerVisible(true);
 		map().setZoomContolsVisible(true);
