@@ -149,13 +149,13 @@ public class VLibTourVisitTouristApplication {
 	 */
 	public static void main(final String[] args) throws Exception {
 		@SuppressWarnings("unused")
-		final VLibTourVisitTouristApplication client = null;
 		String usage = "USAGE: " + VLibTourVisitTouristApplication.class.getCanonicalName()
 				+ " userId (either Joe or Avrel)";
 		if (args.length != 1) {
 			throw new IllegalArgumentException(usage);
 		}
 		String userId = args[0];
+		final VLibTourVisitTouristApplication client = null;
 		if (LOG_ON && EMULATION.isInfoEnabled()) {
 			EMULATION.info(userId + "'s application is starting");
 		}
