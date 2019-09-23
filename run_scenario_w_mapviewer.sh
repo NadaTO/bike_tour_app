@@ -22,7 +22,8 @@ fi
 if [ -z "$GLASSFISH_HOME" ]; then
     echo "Glassfish is not installed: the client to populate the database with the POIs and the tours cannot be executed"
 else
-    ./Scripts/admin_client_tour_management.sh populate toursAndPOIs
+    . ./Scripts/admin_client_tour_management.sh populate toursAndPOIs
+    # no process to stop at the end of the scenario
 fi
 
 # clean up the rabbitmq server, and start the rabbitmq server
@@ -38,7 +39,8 @@ fi
 if [ -z "$RABBITMQ_MNESIA_BASE" ]; then
     echo "RabbitMQ is not installed: the lobby room server cannot be executed"
 else
-    ./Scripts/start_lobby_room_server.sh
+    . ./Scripts/start_lobby_room_server.sh
+    # PROCLOBBYROOMSERVER = pid of the process to kill at the end
     sleep 3
 fi
 
@@ -51,7 +53,8 @@ else
         echo "There is an old visit emulation server running; remove proc $procNumber"
         kill -9 "$procNumber"
     fi
-    ./Scripts/start_visit_emulation_server.sh
+    . ./Scripts/start_visit_emulation_server.sh
+    # PROCVISITEMULATIONSERVER = process identifier of the proc. to kill at the end
     sleep 3
 fi
 
@@ -59,11 +62,13 @@ fi
 if [ -z "$GLASSFISH_HOME" ] || [ -z "$RABBITMQ_MNESIA_BASE" ]; then
     echo "Glassfish or RabbitMQ are not installed: the tourist application cannot be executed"
 else
-    ./Scripts/start_tourist_application_w_emulated_location.sh Joe
-    JOE=$TOURISTAPPLICATION
+    . ./Scripts/start_tourist_application_w_emulated_location.sh Joe
+    # PROCTOURISTAPPLICATION = pid of the process to kill at the end
+    JOE=$PROCTOURISTAPPLICATION
     sleep 1
-    ./Scripts/start_tourist_application_w_emulated_location.sh Avrel
-    AVREL=$TOURISTAPPLICATION
+    . ./Scripts/start_tourist_application_w_emulated_location.sh Avrel
+    # PROCTOURISTAPPLICATION = pid of the process to kill at the end
+    AVREL=$PROCTOURISTAPPLICATION
     sleep 1
 fi
 
@@ -78,12 +83,12 @@ if [ -n "$AVREL" ]; then
     kill -9 $AVREL
 fi
 # stop the lobby room server
-if [ -n "$LOBBYROOMSERVER" ]; then
-    kill -9 $LOBBYROOMSERVER
+if [ -n "$PROCLOBBYROOMSERVER" ]; then
+    kill -9 $PROCLOBBYROOMSERVER
 fi
 # stop the visit emulation server
-if [ -n "$VISITEMULATIONSERVER" ]; then
-    kill -9 $VISITEMULATIONSERVER
+if [ -n "$PROCVISITEMULATIONSERVER" ]; then
+    kill -9 $PROCVISITEMULATIONSERVER
 fi
 
 # stop the rabbitmq server
@@ -94,7 +99,7 @@ fi
 
 # empty the database, undeploy the bean, and stop the database and the domain
 if [ -n "$GLASSFISH_HOME" ]; then
-    ./Scripts/admin_client_tour_management.sh empty toursAndPOIs
+    . ./Scripts/admin_client_tour_management.sh empty toursAndPOIs
     asadmin undeploy vlibtour-tour-management-bean
     asadmin stop-database
     asadmin stop-domain domain1

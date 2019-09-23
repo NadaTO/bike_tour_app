@@ -3,10 +3,20 @@
 # test Java 8
 if ! $(java -version 2>&1 | head -1 | grep '\"1\.8' > /dev/null); then
     echo "Not a JAVA 8 version: '$(java -version 2>&1 | head -1)'"
-    exit 1
+    return 1
 fi
 
-. "$(cd $(dirname "$0") && pwd)"/utils.sh
+# configure variables
+if [ -e utils.sh ]; then
+    . ./utils.sh
+else
+    if [ -d Scripts ]; then
+        . ./Scripts/utils.sh
+    else
+        echo "Don't where you are"
+        return 1
+    fi
+fi
 
 ARGS=$*
 
@@ -19,4 +29,4 @@ CMD="java -cp ${CLASSPATH} ${CLASS} ${ARGS}"
 
 # this script is launched by sourcing => & and export
 $CMD &
-export LOBBYROOMSERVER=$!
+export PROCLOBBYROOMSERVER=$!
