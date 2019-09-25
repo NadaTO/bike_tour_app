@@ -92,7 +92,7 @@ public class VLibTourVisitTouristApplication {
 	 * {@link vlibtour.vlibtour_client_emulation_visit.VLibTourVisitEmulationClient}.
 	 */
 	@SuppressWarnings("unused")
-	private VLibTourVisitEmulationClient emulationVisitClient;
+	private static VLibTourVisitEmulationClient emulationVisitClient;
 	/**
 	 * delegation to the client of type
 	 * {@link vlibtour.vlibtour_client_group_communication_system.VLibTourGroupCommunicationSystemClient}.
@@ -136,7 +136,8 @@ public class VLibTourVisitTouristApplication {
 	public VLibTourVisitTouristApplication(final String tourId, final Optional<String> groupId, final String userId)
 			throws InAMQPPartException, VlibTourTourManagementException, IOException, JsonRpcException,
 			TimeoutException, InterruptedException, NamingException {
-		throw new UnsupportedOperationException("No implemented, yet");
+		//throw new UnsupportedOperationException("No implemented, yet");	
+	    emulationVisitClient = new VLibTourVisitEmulationClient();
 	}
 
 	/**
@@ -155,7 +156,7 @@ public class VLibTourVisitTouristApplication {
 			throw new IllegalArgumentException(usage);
 		}
 		String userId = args[0];
-		final VLibTourVisitTouristApplication client = null;
+		final VLibTourVisitTouristApplication client = new VLibTourVisitTouristApplication("The unusual Paris",Optional.empty(),userId) ;
 		if (LOG_ON && EMULATION.isInfoEnabled()) {
 			EMULATION.info(userId + "'s application is starting");
 		}
@@ -172,9 +173,9 @@ public class VLibTourVisitTouristApplication {
 					+ client.getClass().getCanonicalName() + " is launched from directory "
 					+ "./vlibtour-scenario/src/main/resources/osm-mapnik/");
 		}
-		if (client == null) {
+		/*if (client == null) {
 			throw new UnsupportedOperationException("No implemented, yet");
-		}
+		}*/
 		client.map = Optional.of(MapHelper.createMapWithCenterAndZoomLevel(
 				"./vlibtour-scenario/src/main/resources/osm-mapnik/", 48.851412, 2.343166, 14));
 		Font font = new Font("name", Font.BOLD, 20);
@@ -206,10 +207,18 @@ public class VLibTourVisitTouristApplication {
 		// FIXME
 		while (true) {
 			// step in the current path
+		Position	position =emulationVisitClient.stepInCurrentPath(userId);
 			// TODO
+			if (userId == ExampleOfAVisitWithTwoTourists.USER_ID_JOE) {
+				client.map.ifPresent(m -> { mapDotJoe = MapHelper.addTouristOnMap(m, colorJoe, font, ExampleOfAVisitWithTwoTourists.USER_ID_JOE,
+						position);
+				});
+			}
+			
+			Thread.sleep(500);
 			// repainting # approximately 2x2s => delay only non-leader clients => not all
 			// the clients at the same speed
-			// Thread.sleep...
+			// Thread.sleep... 
 		}
 		// closes the channel and the connection.
 		// TODO
