@@ -21,8 +21,55 @@ Contributor(s):
  */
 package vlibtour.vlibtour_client_emulation_visit;
 
+import java.net.URI;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
+
+import vlibtour.vlibtour_visit_emulation.ExampleOfAVisitWithTwoTourists;
+import vlibtour.vlibtour_visit_emulation.Position;
+
 /**
  * The REST client of the VLibTour Emulation Visit Server.
  */
 public final class VLibTourVisitEmulationClient {
+	
+	private WebTarget service;
+	
+	public VLibTourVisitEmulationClient() {
+		Client client = ClientBuilder.newClient();
+		URI uri = UriBuilder.fromUri(ExampleOfAVisitWithTwoTourists.BASE_URI_WEB_SERVER).build();
+		WebTarget service = client.target(uri);		
+	}
+	
+	public Position getNextPOIPosition(String user) {
+		Position position=service
+				.path("visitemulation/getNextPOIPosition/" + user).request()
+				.accept(MediaType.APPLICATION_JSON).get().readEntity(Position.class);
+		return position;
+	}
+	
+	public  Position getCurrentPosition() {
+		Position position=service
+				.path("visitemulation/getCurrentPosition/" + ExampleOfAVisitWithTwoTourists.USER_ID_JOE).request()
+				.accept(MediaType.APPLICATION_JSON).get().readEntity(Position.class);
+		return position;
+	}
+	
+	public  Position stepInCurrentPath( String user) {
+		Position position=service
+				.path("visitemulation/stepInCurrentPath/" + user).request()
+				.accept(MediaType.APPLICATION_JSON).get().readEntity(Position.class);
+		return position;
+	}
+	
+	public Position stepsInVisit(String user) {
+		Position position=service
+				.path("visitemulation/stepInVisit/" + user).request()
+				.accept(MediaType.APPLICATION_JSON).get().readEntity(Position.class);
+		return position;
+	}
 }

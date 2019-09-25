@@ -35,6 +35,7 @@ import javax.ws.rs.core.UriBuilder;
 import vlibtour.vlibtour_visit_emulation.ExampleOfAVisitWithTwoTourists;
 import vlibtour.vlibtour_visit_emulation.Position;
 
+
 /**
  * A REST client test example.
  * <p>
