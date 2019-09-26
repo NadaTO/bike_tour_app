@@ -168,16 +168,14 @@ public class VLibTourVisitTouristApplication {
 		// has created the group [see #VLibTourVisitTouristApplication(...)])
 		// the following code should be completed
 		// FIXME
-		if (LOG_ON && EMULATION.isDebugEnabled()) {
-			EMULATION.debug("Current directory = " + System.getProperty("user.dir") + ".\n" + "We assume that class "
-					+ client.getClass().getCanonicalName() + " is launched from directory "
-					+ "./vlibtour-scenario/src/main/resources/osm-mapnik/");
-		}
+	
 		/*if (client == null) {
 			throw new UnsupportedOperationException("No implemented, yet");
 		}*/
-		client.map = Optional.of(MapHelper.createMapWithCenterAndZoomLevel(
-				"./vlibtour-scenario/src/main/resources/osm-mapnik/", 48.851412, 2.343166, 14));
+	
+		client.map = Optional.of(MapHelper.createMapWithCenterAndZoomLevel(48.851412, 2.343166, 14));
+
+
 		Font font = new Font("name", Font.BOLD, 20);
 		client.map.ifPresent(m -> {
 			MapHelper.addMarkerDotOnMap(m, 48.871799, 2.342355, Color.BLACK, font, "Musée Grevin");

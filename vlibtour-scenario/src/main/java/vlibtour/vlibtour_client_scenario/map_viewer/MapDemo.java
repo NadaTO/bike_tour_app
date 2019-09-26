@@ -58,8 +58,9 @@ public final class MapDemo {
 		// with a 14 zoom level
 		// The tiles for this map have been previously downloaded to
 		// src/main/resources/osm-mapnik
-		BasicMap map = MapHelper.createMapWithCenterAndZoomLevel("src/main/resources/osm-mapnik/", 48.851412, 2.343166,
-				14);
+		
+		BasicMap map = MapHelper.createMapWithCenterAndZoomLevel(48.851412, 2.343166,14);
+
 		Font font = new Font("name", Font.BOLD, 20);
 		// Add markers for the POIs in the tour
 		MapHelper.addMarkerDotOnMap(map, 48.871799, 2.342355, Color.BLACK, font, "Musée Grevin");

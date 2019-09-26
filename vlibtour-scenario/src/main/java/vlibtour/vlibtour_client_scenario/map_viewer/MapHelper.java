@@ -57,7 +57,7 @@ public final class MapHelper {
 	 * @return the new map.
 	 * @throws MalformedURLException pb in the file URL
 	 */
-	public static BasicMap createMapWithCenterAndZoomLevel(final String path, final double latitude,
+	public static BasicMap createMapWithCenterAndZoomLevel(final double latitude,
 			final double longitude, final int zoomLevel) throws MalformedURLException {
 		BasicMap basicMap = new BasicMap();
 		basicMap.map().setDisplayPosition(new Coordinate(latitude, longitude), zoomLevel);
@@ -66,8 +66,10 @@ public final class MapHelper {
 		 * openstreetmap-client in the directory ~/.cache/champlain/osm-mapnik/ and then
 		 * copied in src/main/resources
 		 */
-		basicMap.map().setTileSource(
-				new OfflineOsmTileSource((new File(path).toURI().toURL()).toString(), zoomLevel, zoomLevel));
+		basicMap.map()
+		.setTileSource(new OfflineOsmTileSource(
+				Thread.currentThread().getContextClassLoader().getResource("osm-mapnik/").toString(), zoomLevel,
+				zoomLevel));
 
 		return basicMap;
 	}
