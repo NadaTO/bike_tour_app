@@ -50,7 +50,6 @@ public final class MapHelper {
 	 * initialises the map: map viewer, and display position with the centre and the
 	 * zoom level.
 	 * 
-	 * @param path      the path to the OSM tiles.
 	 * @param latitude  the latitude of the centre of the map.
 	 * @param longitude the longitude of the centre of the map.
 	 * @param zoomLevel the zoom level.

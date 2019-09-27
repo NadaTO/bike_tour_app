@@ -91,7 +91,6 @@ public class VLibTourVisitTouristApplication {
 	 * delegation to the client of type
 	 * {@link vlibtour.vlibtour_client_emulation_visit.VLibTourVisitEmulationClient}.
 	 */
-	@SuppressWarnings("unused")
 	private static VLibTourVisitEmulationClient emulationVisitClient;
 	/**
 	 * delegation to the client of type
@@ -182,12 +181,12 @@ public class VLibTourVisitTouristApplication {
 			MapHelper.addMarkerDotOnMap(m, 48.860959, 2.335757, Color.BLACK, font, "Pyramide du Louvres");
 			MapHelper.addMarkerDotOnMap(m, 48.833566, 2.332416, Color.BLACK, font, "Les catacombes");
 			// all the tourists start at the same position
-			Position positionOfJoe = null;
+			/*Position positionOfJoe = null;
 			mapDotJoe = MapHelper.addTouristOnMap(m, colorJoe, font, ExampleOfAVisitWithTwoTourists.USER_ID_JOE,
 					positionOfJoe);
 			Position positionOfAvrel = null;
 			mapDotAvrel = MapHelper.addTouristOnMap(m, colorAvrel, font, ExampleOfAVisitWithTwoTourists.USER_ID_AVREL,
-					positionOfAvrel);
+					positionOfAvrel);*/
 			client.map.get().repaint();
 			// wait for painting the map
 			try {
@@ -203,20 +202,31 @@ public class VLibTourVisitTouristApplication {
 		// TODO
 		// loop until the end of the visit is detected
 		// FIXME
+		//emulationVisitClient.stepsInVisit(userId);
+		Position oldPosition = emulationVisitClient.getCurrentPosition(userId);
+		MapMarkerDot dot =MapHelper.addTouristOnMap(client.map.get(), Color.ORANGE, font,userId,oldPosition);
+		emulationVisitClient.stepsInVisit(userId);
 		while (true) {
-			// step in the current path
-		Position	position =emulationVisitClient.stepInCurrentPath(userId);
-			// TODO
-			if (userId == ExampleOfAVisitWithTwoTourists.USER_ID_JOE) {
-				client.map.ifPresent(m -> { mapDotJoe = MapHelper.addTouristOnMap(m, colorJoe, font, ExampleOfAVisitWithTwoTourists.USER_ID_JOE,
-						position);
-				});
+			// step in the current path		
+			// TODO		
+		oldPosition = emulationVisitClient.getCurrentPosition(userId);
+		Position position = emulationVisitClient.stepInCurrentPath(userId);
+		MapHelper.moveTouristOnMap(dot, position);
+		// repainting # approximately 2x2s => delay only non-leader clients => not all
+		// the clients at the same speed
+		client.map.get().repaint();
+		// Thread.sleep... 
+		Thread.sleep(5000);
+		if (oldPosition.getName().equals(position.getName()))	{
+		position = emulationVisitClient.stepsInVisit(userId);
+		}
+		
+		if (position.getName().equals(emulationVisitClient.stepsInVisit(userId).getName())) {
+			if (LOG_ON && EMULATION.isInfoEnabled()) {
+				EMULATION.info(userId + "has ended the trip");
 			}
-			
-			Thread.sleep(500);
-			// repainting # approximately 2x2s => delay only non-leader clients => not all
-			// the clients at the same speed
-			// Thread.sleep... 
+		System.exit(0);	
+		}						
 		}
 		// closes the channel and the connection.
 		// TODO

@@ -42,7 +42,7 @@ public final class VLibTourVisitEmulationClient {
 	public VLibTourVisitEmulationClient() {
 		Client client = ClientBuilder.newClient();
 		URI uri = UriBuilder.fromUri(ExampleOfAVisitWithTwoTourists.BASE_URI_WEB_SERVER).build();
-		WebTarget service = client.target(uri);		
+		service = client.target(uri);		
 	}
 	
 	public Position getNextPOIPosition(String user) {
@@ -68,7 +68,7 @@ public final class VLibTourVisitEmulationClient {
 	
 	public Position stepsInVisit(String user) {
 		Position position=service
-				.path("visitemulation/stepInVisit/" + user).request()
+				.path("visitemulation/stepsInVisit/" + user).request()
 				.accept(MediaType.APPLICATION_JSON).get().readEntity(Position.class);
 		return position;
 	}
