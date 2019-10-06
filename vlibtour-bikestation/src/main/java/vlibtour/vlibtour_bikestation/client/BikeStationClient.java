@@ -20,15 +20,53 @@ Initial developer(s): Chantal Taconet
 Contributor(s): Denis Conan
  */
 package vlibtour.vlibtour_bikestation.client;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.util.Properties;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.UriBuilder;
+
+import vlibtour.vlibtour_bikestation.client.generated_from_json.Station;
+
+import javax.ws.rs.core.MediaType;
 /**
  * The bike station REST client example.
  */
 public final class BikeStationClient {
 	
 	/**
-	 * utility class with no instance.
+	 * the URI.
 	 */
+	private static String restURI;
+
 	private BikeStationClient() {
+		
 	}
+	
+	/**
+	 * the main method.
+	 * 
+	 * @param args
+	 *            there is no command line arguments.
+	 * @throws IOException
+	 *             problem with HTTP connection.
+	 */
+	public static void main(final String[] args) throws IOException {
+		
+		Properties properties = new Properties();
+		FileInputStream input = new FileInputStream("src/main/resources/rest.properties");
+		properties.load(input);
+		restURI = properties.getProperty("jcdecaux.rooturl");
+		Client client = ClientBuilder.newClient();
+		URI uri = UriBuilder.fromUri(restURI).build();
+		WebTarget service = client.target(uri);
+		Station station = service.path("/stations").queryParam("contract","lyon").queryParam("apiKey","e282afdd13aca4cba4fb50.5603d5224d4a9cad03").queryParam("number","2010").request().accept(MediaType.APPLICATION_JSON).get(Station.class);
+		System.out.println("station infos : \n"+ station.toString());
+	}
+	
+	
 }

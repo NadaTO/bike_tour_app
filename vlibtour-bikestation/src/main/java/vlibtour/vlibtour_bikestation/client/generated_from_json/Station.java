@@ -86,6 +86,16 @@ public class Station {
         this.lastUpdate = lastUpdate;
     }
 
+    public boolean sameCity( final String city) {
+    	if (this.contractName.equals(city))return true;
+    	else return false;
+    }
+    
+    public boolean containsInItsName( final String name) {
+    	if (this.name.equals(name))return true;
+    	else return false;
+    	
+    }
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("number", number).append("name", name).append("address", address).append("position", position).append("banking", banking).append("bonus", bonus).append("status", status).append("contractName", contractName).append("bikeStands", bikeStands).append("availableBikeStands", availableBikeStands).append("availableBikes", availableBikes).append("lastUpdate", lastUpdate).toString();
