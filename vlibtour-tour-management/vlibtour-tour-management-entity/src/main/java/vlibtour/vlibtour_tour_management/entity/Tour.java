@@ -21,7 +21,17 @@ Contributor(s):
  */
 package vlibtour.vlibtour_tour_management.entity;
 
+import static javax.persistence.CascadeType.ALL;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 /**
  * The entity bean defining a tour in the VLibTour case study. A tour is a
@@ -31,11 +41,47 @@ import java.io.Serializable;
  * 
  * @author Denis Conan
  */
+@Entity
 public class Tour implements Serializable {
 	/**
 	 * the serial version UID.
 	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * id of the tour.
+	 */
+	@GeneratedValue
+	private int id;
+	/**
+	 * the name of the tour.
+	 */
+	private String name;
+	/**
+	 * the collection of POIs
+	 */
+	private Collection<POI> pois = new ArrayList <POI>();
+	/**
+	 * gets the identifier
+	 * @return the identifier
+	 */
+	@Id 
+	public int getId() {
+		return id;
+	}
+	/**
+	 * sets the identifier
+     * @param id
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+	/**
+	 * sets the name
+     * @param name
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	/**
 	 * gets the name of the tour.
@@ -43,6 +89,27 @@ public class Tour implements Serializable {
 	 * @return the name of the tour.
 	 */
 	public String getName() {
-		throw new UnsupportedOperationException("Not implemented, yet.");
+		return name;
 	}
+	/**
+	 * gets the collection of POIs.
+	 * 
+	 * @return the pois.
+	 */
+	@ManyToMany()	
+	public Collection<POI> getPois() {
+		return pois;
+	}
+	/**
+	 *sets the collection of POIs.
+	 * 
+	 * @param pois.
+	 */
+	public void setPois(Collection<POI> pois) {
+		this.pois = pois;
+	}
+	
+	
+	
+	
 }

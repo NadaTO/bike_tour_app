@@ -21,7 +21,12 @@ Contributor(s):
  */
 package vlibtour.vlibtour_tour_management.api;
 
+import java.util.Collection;
+
 import javax.ejb.Remote;
+
+import vlibtour.vlibtour_tour_management.entity.POI;
+import vlibtour.vlibtour_tour_management.entity.Tour;
 
 /**
  * This interface defines the operation for managing POIs and Tours.
@@ -30,4 +35,28 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface VlibTourTourManagement {
+	
+	/**
+	 * Insert Tour and POIs.
+	 * 
+	 * @return the string "OK" if there is no problem.
+	 */
+	String testInsert();
+
+	/**
+	 * verifies the insertion.
+	 * 
+	 * @return the string "OK" if there is no problem.
+	 */
+	String verifyInsert();
+	
+	Collection<Tour> listTours();
+	
+	Tour getTour (final String name);
+	
+	POI getPOI (final String name);
+	
+	Tour createTour (final String name, final Collection <POI> pois);	
+	
+	
 }

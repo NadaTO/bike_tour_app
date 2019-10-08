@@ -22,6 +22,12 @@ Contributor(s):
 package vlibtour.vlibtour_tour_management.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 /**
  * The entity bean defining a point of interest (POI). A {@link Tour} is a
@@ -31,18 +37,83 @@ import java.io.Serializable;
  * 
  * @author Denis Conan
  */
+@Entity
 public class POI implements Serializable {
 	/**
 	 * the serial version UID.
 	 */
 	private static final long serialVersionUID = 1L;
-
 	/**
-	 * gets the name of the tour.
-	 * 
-	 * @return the name of the tour.
+	 * id of the POI.
 	 */
+	@GeneratedValue
+	private int id;
+	/**
+	 * the name of the POI.
+	 */
+	private String name;
+	/**
+	 * the collection of corresponding tour.
+	 */
+	private Collection<Tour> tours ;
+	
+	/**
+	 * gets the name.
+	 * 
+	 * @return the name.
+	 */
+
+
 	public String getName() {
-		throw new UnsupportedOperationException("Not implemented, yet.");
+		return name;
 	}
+	/**
+	 * sets the name.
+	 * 
+	 * @param name
+	 *            the new name.
+	 */
+	public void setName(final String name) {
+		this.name = name;
+	}
+	/**
+	 * gets the identifier.
+	 * 
+	 * @return the identifier.
+	 */
+
+	@Id
+	public int getId() {
+		return id;
+	}
+	/**
+	 * sets the identifier.
+	 * 
+	 * @param id
+	 *            the new identifier.
+	 */
+	public void setId(final int id) {
+		this.id = id;
+	}
+	
+	/**
+	 * gets the collection of tours.
+	 * 
+	 * @return the tour.
+	 */
+
+	@ManyToMany()
+	public Collection<Tour> getTours() {
+		return tours;
+	}
+	/**
+	 * sets the corresponding tour.
+	 * 
+	 * @param tours
+	 *            the new corresponding tour.
+	 */
+	public void setTour(final Collection<Tour> tours) {
+		this.tours = tours;
+	}
+
 }

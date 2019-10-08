@@ -62,7 +62,7 @@ public final class StationsRest {
 	/**
 	 * the file name of the data base.
 	 */
-	private String fileName = "src/main/resources/paris.jsin";
+	private String fileName = "src/main/resources/paris.json";
 
 
 	/**
@@ -122,7 +122,7 @@ public final class StationsRest {
 	/**
 	 * gets all the stations of a given city as an JSON document.
 	 * 
-	 * @param age
+	 * @param contract
 	 *            the criterion for the selection.
 	 * @return the collection of stations
 	 * @throws JAXBException
@@ -142,7 +142,7 @@ public final class StationsRest {
 	/**
 	 * gets a station of a given city as a JSON text.
 	 * 
-	 * @param age
+	 * @param contract
 	 *            the criterion for the selection.
 	 * @return the station
 	 * @throws JAXBException

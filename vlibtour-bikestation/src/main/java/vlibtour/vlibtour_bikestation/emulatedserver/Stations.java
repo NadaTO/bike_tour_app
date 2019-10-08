@@ -55,7 +55,7 @@ public class Stations {
 	/**
 	 * constructs the object in the given collection of stations.
 	 * 
-	 * @param skiers
+	 * @param stations
 	 *            the collection of stations.
 	 */
 	public Stations(final List<Station> stations) {
@@ -65,7 +65,7 @@ public class Stations {
 	/**
 	 * add a skier to the collection.
 	 * 
-	 * @param skier
+	 * @param station
 	 *            the skier to add.
 	 */
 	public void add(final Station station) {
@@ -75,7 +75,7 @@ public class Stations {
 	/**
 	 * searches for the stations of a given city.
 	 * 
-	 * @param age
+	 * @param contract
 	 *            the city for the search.
 	 * @return the collection of stations matching the criteria.
 	 */
