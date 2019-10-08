@@ -30,11 +30,13 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 
+import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 
 import com.rabbitmq.tools.jsonrpc.JsonRpcException;
+
 
 import vlibtour.vlibtour_client_emulation_visit.VLibTourVisitEmulationClient;
 import vlibtour.vlibtour_client_group_communication_system.VLibTourGroupCommunicationSystemClient;
@@ -42,8 +44,9 @@ import vlibtour.vlibtour_client_lobby_room.VLibTourLobbyRoomClient;
 import vlibtour.vlibtour_client_scenario.map_viewer.BasicMap;
 import vlibtour.vlibtour_client_scenario.map_viewer.MapHelper;
 import vlibtour.vlibtour_lobby_room_api.InAMQPPartException;
+import vlibtour.vlibtour_tour_management.api.VlibTourTourManagement;
+import vlibtour.vlibtour_tour_management.entity.Tour;
 import vlibtour.vlibtour_tour_management.entity.VlibTourTourManagementException;
-import vlibtour.vlibtour_visit_emulation.ExampleOfAVisitWithTwoTourists;
 import vlibtour.vlibtour_visit_emulation.Position;
 
 /**
@@ -195,6 +198,24 @@ public class VLibTourVisitTouristApplication {
 				e.printStackTrace();
 			}
 		});
+		
+		VlibTourTourManagement sb;
+		Tour t;
+		try {
+			InitialContext ic = new InitialContext();
+			sb = (VlibTourTourManagement) ic.lookup("vlibtour.vlibtour_management_api.VlibTourTourManagement");
+			System.out.println("Inserting Customer and Orders... " + sb.testInsert());
+			// Test query and navigation
+			System.out.println("Verifying that all are inserted... " + sb.verifyInsert());
+			// Get a detached instance
+			t = sb.getTour("Paris Tour");
+			// Remove entity
+			System.out.println("Removing entity... " + sb.testDelete(t));
+			// Query the results
+			System.out.println("Verifying that all are removed... " + sb.verifyDelete());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		// start the consumption of messages (e.g. positions of group members) from the group communication system 
 		// TODO
 		// repainting # approximately 3s => delay only non-leader clients => not all
@@ -235,3 +256,4 @@ public class VLibTourVisitTouristApplication {
 		// e.g. System.exit...
 	}
 }
+
