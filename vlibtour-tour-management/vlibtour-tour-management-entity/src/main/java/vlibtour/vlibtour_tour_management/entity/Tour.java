@@ -57,6 +57,10 @@ public class Tour implements Serializable {
 	 */
 	private String name;
 	/**
+	 * the description of the tour.
+	 */
+	private String description;
+	/**
 	 * the collection of POIs
 	 */
 	private Collection<POI> pois = new ArrayList <POI>();
@@ -90,6 +94,25 @@ public class Tour implements Serializable {
 	 */
 	public String getName() {
 		return name;
+	}
+	/**
+	 * gets the description.
+	 * 
+	 * @return the description.
+	 */
+
+
+	public String getDescription() {
+		return description;
+	}
+	/**
+	 * sets the description.
+	 * 
+	 * @param description
+	 *            the new description.
+	 */
+	public void setDescription(final String description) {
+		this.description= description;
 	}
 	/**
 	 * gets the collection of POIs.

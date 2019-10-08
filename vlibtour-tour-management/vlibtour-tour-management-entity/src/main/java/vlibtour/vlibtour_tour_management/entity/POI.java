@@ -29,6 +29,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import vlibtour.vlibtour_visit_emulation.GPSPosition;
+
 /**
  * The entity bean defining a point of interest (POI). A {@link Tour} is a
  * sequence of points of interest.
@@ -53,10 +55,17 @@ public class POI implements Serializable {
 	 */
 	private String name;
 	/**
+	 * the description of the POI.
+	 */
+	private String description;
+	/**
 	 * the collection of corresponding tour.
 	 */
 	private Collection<Tour> tours ;
-	
+	/**
+	 * the position of the POI.
+	 */
+	private GPSPosition position;
 	/**
 	 * gets the name.
 	 * 
@@ -75,6 +84,44 @@ public class POI implements Serializable {
 	 */
 	public void setName(final String name) {
 		this.name = name;
+	}
+	/**
+	 * gets the description.
+	 * 
+	 * @return the description.
+	 */
+
+
+	public String getDescription() {
+		return description;
+	}
+	/**
+	 * sets the description.
+	 * 
+	 * @param description
+	 *            the new description.
+	 */
+	public void setDescription(final String description) {
+		this.description= description;
+	}
+	/**
+	 * gets the position.
+	 * 
+	 * @return the position.
+	 */
+
+
+	public GPSPosition getPosition() {
+		return position;
+	}
+	/**
+	 * sets the position.
+	 * 
+	 * @param position
+	 *            the new position.
+	 */
+	public void setPosition(final GPSPosition position) {
+		this.position= position;
 	}
 	/**
 	 * gets the identifier.

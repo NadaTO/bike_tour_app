@@ -228,6 +228,7 @@ public class VLibTourVisitTouristApplication {
 		System.exit(0);	
 		}						
 		}
+		
 		// closes the channel and the connection.
 		// TODO
 		// exit this main
