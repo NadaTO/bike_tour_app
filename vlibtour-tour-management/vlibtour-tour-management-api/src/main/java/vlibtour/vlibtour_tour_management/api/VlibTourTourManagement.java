@@ -24,7 +24,6 @@ package vlibtour.vlibtour_tour_management.api;
 import java.util.Collection;
 
 import javax.ejb.Remote;
-
 import vlibtour.vlibtour_tour_management.entity.POI;
 import vlibtour.vlibtour_tour_management.entity.Tour;
 
@@ -49,6 +48,21 @@ public interface VlibTourTourManagement {
 	 * @return the string "OK" if there is no problem.
 	 */
 	String verifyInsert();
+	/**
+	 * deletes the given tour.
+	 * 
+	 * @param t
+	 *            the tour and the associated pois.
+	 * @return the string "OK" if there is no problem.
+	 */
+	String testDelete(Tour t);
+
+	/**
+	 * verifies the deletion.
+	 * 
+	 * @return the string "OK" if there is no problem.
+	 */
+	String verifyDelete();
 	
 	Collection<Tour> listTours();
 	

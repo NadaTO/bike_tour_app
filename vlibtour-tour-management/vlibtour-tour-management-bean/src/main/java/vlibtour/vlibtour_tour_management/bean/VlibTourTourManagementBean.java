@@ -121,4 +121,29 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 		return "OK";
 	}
 	
+	@Override
+	public String testDelete(final Tour t) {
+		// Merge the tour to the new persistence context
+		Tour t0 = em.merge(t);
+		// Delete all records.
+		em.remove(t0);
+		return "OK";
+	}
+
+	@Override
+	public String verifyDelete() {
+		Query q = em.createQuery("select t from Tour t");
+		@SuppressWarnings("rawtypes")
+		List results = q.getResultList();
+		if (results == null || results.size() != 0) {
+			throw new RuntimeException("Unexpected number of tours after delete results : " + results.size());
+		}
+		q = em.createQuery("select p from POI p");
+		results = q.getResultList();
+		if (results == null || results.size() != 0) {
+			throw new RuntimeException("Unexpected number of pois after delete");
+		}
+		return "OK";
+	}
+	
 }
