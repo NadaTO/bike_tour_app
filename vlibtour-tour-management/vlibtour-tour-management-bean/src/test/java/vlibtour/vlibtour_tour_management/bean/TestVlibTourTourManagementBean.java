@@ -21,14 +21,20 @@ Contributor(s):
  */
 package vlibtour.vlibtour_tour_management.bean;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javax.naming.InitialContext;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import vlibtour.vlibtour_tour_management.api.VlibTourTourManagement;
+import vlibtour.vlibtour_tour_management.entity.POI;
+import vlibtour.vlibtour_tour_management.entity.Tour;
 import vlibtour.vlibtour_tour_management.entity.VlibTourTourManagementException;
 
 public class TestVlibTourTourManagementBean {
@@ -67,11 +73,21 @@ public class TestVlibTourTourManagementBean {
 	public void findAllPOIsTest1() throws Exception {
 	}
 
-	@Ignore
+	
 	@Test(expected = VlibTourTourManagementException.class)
 	public void createTourTest1() throws Exception {
 		//test tour creation
-		System.out.println("Verifying that all are inserted... " + sb.verifyInsert());
+		
+		POI poi1 = new POI();
+		poi1.setName("1 Champs-Elysees, Paris, France");
+		POI poi2 = new POI();
+		poi2.setName("99 Main Street, London, UK");
+		Collection <POI> c = new ArrayList <POI>();
+		c.add(poi1);
+		c.add(poi2);
+		
+	    Tour t=sb.createTour("",c);
+		
 	}
 
 	@Ignore

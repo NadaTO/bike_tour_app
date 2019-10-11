@@ -26,6 +26,7 @@ import java.util.Collection;
 import javax.ejb.Remote;
 import vlibtour.vlibtour_tour_management.entity.POI;
 import vlibtour.vlibtour_tour_management.entity.Tour;
+import vlibtour.vlibtour_tour_management.entity.VlibTourTourManagementException;
 
 /**
  * This interface defines the operation for managing POIs and Tours.
@@ -70,8 +71,14 @@ public interface VlibTourTourManagement {
 	
 	POI getPOI (final String name);
 	
-	Tour createTour (final String name, final Collection <POI> pois);	
+	Tour createTour (final String name, final Collection <POI> pois) throws VlibTourTourManagementException;	
 	
-	POI createPOI (String name, double latitude,double longitude);
+	POI createPOI (String name, double latitude,double longitude) throws VlibTourTourManagementException;
+	
+	void removePOI (POI poi);
+	
+	void removePOIFromTour (POI poi , Tour tour);
+	
+	void removeTour (Tour tour);
 	
 }

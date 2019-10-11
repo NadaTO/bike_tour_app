@@ -28,10 +28,10 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import vlibtour.vlibtour_tour_management.api.VlibTourTourManagement;
 import vlibtour.vlibtour_tour_management.entity.POI;
 import vlibtour.vlibtour_tour_management.entity.Tour;
+import vlibtour.vlibtour_tour_management.entity.VlibTourTourManagementException;
 
 /**
  * This class defines the EJB Bean of the VLibTour tour management.
@@ -69,7 +69,12 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 	}
 
 	@Override
-	public Tour createTour(String name, Collection<POI> pois) {
+	public Tour createTour (String name, Collection<POI> pois) throws VlibTourTourManagementException {
+		if (getTour(name)!= null)
+			throw new VlibTourTourManagementException ("Tour already exists");
+		if (name == "")
+			throw new VlibTourTourManagementException ("Tour name is empty");
+		
 		Tour tour = new Tour();
 		tour.setName(name);
 		tour.setPois(pois);
@@ -77,7 +82,7 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 		return tour;	
 	}
 	@Override
-	public POI createPOI (String name, double latitude,double longitude) {
+	public POI createPOI (String name, double latitude,double longitude) throws VlibTourTourManagementException {
 		POI poi = new POI();
 		poi.setName(name);
 		poi.setLatitude(latitude);
@@ -85,7 +90,23 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 		em.persist(poi);
 		return poi;	
 	}
-
+	@Override
+	public void removePOI (POI poi) {
+		POI p0 = em.merge(poi);
+		em.remove(p0);
+	}
+	
+	@Override
+	public void removePOIFromTour (POI poi, Tour tour) {
+		tour.getPois().remove(poi);
+	}
+	
+	@Override
+	public void removeTour (Tour tour) {
+		Tour t0 = em.merge(tour);
+		em.remove(t0);
+	}
+	
 	@Override
 	public String testInsert() {
 		// Create a new tour
@@ -120,30 +141,17 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 		}
 		return "OK";
 	}
-	
+
 	@Override
-	public String testDelete(final Tour t) {
-		// Merge the tour to the new persistence context
-		Tour t0 = em.merge(t);
-		// Delete all records.
-		em.remove(t0);
-		return "OK";
+	public String testDelete(Tour t) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public String verifyDelete() {
-		Query q = em.createQuery("select t from Tour t");
-		@SuppressWarnings("rawtypes")
-		List results = q.getResultList();
-		if (results == null || results.size() != 0) {
-			throw new RuntimeException("Unexpected number of tours after delete results : " + results.size());
-		}
-		q = em.createQuery("select p from POI p");
-		results = q.getResultList();
-		if (results == null || results.size() != 0) {
-			throw new RuntimeException("Unexpected number of pois after delete");
-		}
-		return "OK";
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
