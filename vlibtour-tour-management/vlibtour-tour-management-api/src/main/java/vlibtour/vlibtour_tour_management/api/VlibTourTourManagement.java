@@ -58,5 +58,6 @@ public interface VlibTourTourManagement {
 	
 	Tour createTour (final String name, final Collection <POI> pois);	
 	
+	POI createPOI (String name, double latitude,double longitude);
 	
 }

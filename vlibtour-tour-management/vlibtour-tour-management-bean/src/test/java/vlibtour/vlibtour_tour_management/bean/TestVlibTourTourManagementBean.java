@@ -21,24 +21,37 @@ Contributor(s):
  */
 package vlibtour.vlibtour_tour_management.bean;
 
+import javax.naming.InitialContext;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
+import vlibtour.vlibtour_tour_management.api.VlibTourTourManagement;
 import vlibtour.vlibtour_tour_management.entity.VlibTourTourManagementException;
 
 public class TestVlibTourTourManagementBean {
+	private static VlibTourTourManagement sb;
+	
 	@BeforeClass
 	public static void setUpClass() throws Exception {
+		try {
+			InitialContext ic = new InitialContext();
+			sb = (VlibTourTourManagement) ic.lookup("vlibtour.vlibtour_tour_management.api.VlibTourTourManagement");
+			System.out.println("Inserting POIs and Tours... " + sb.testInsert());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Ignore
 	@Test(expected = VlibTourTourManagementException.class)
 	public void createPOITest1() throws Exception {
+		
 	}
-
+	
 	@Ignore
 	@Test(expected = VlibTourTourManagementException.class)
 	public void findPOIWithPIDTest1() throws Exception {
@@ -57,6 +70,8 @@ public class TestVlibTourTourManagementBean {
 	@Ignore
 	@Test(expected = VlibTourTourManagementException.class)
 	public void createTourTest1() throws Exception {
+		//test tour creation
+		System.out.println("Verifying that all are inserted... " + sb.verifyInsert());
 	}
 
 	@Ignore

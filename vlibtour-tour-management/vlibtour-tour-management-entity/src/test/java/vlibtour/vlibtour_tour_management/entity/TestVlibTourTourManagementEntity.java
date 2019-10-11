@@ -29,10 +29,12 @@ public class TestVlibTourTourManagementEntity {
 	@Ignore
 	@Test(expected = VlibTourTourManagementException.class)
 	public void createPOITest1() throws Exception {
+		
 	}
 
 	@Ignore
 	@Test(expected = VlibTourTourManagementException.class)
 	public void createTourTest1() throws Exception {
+		
 	}
 }

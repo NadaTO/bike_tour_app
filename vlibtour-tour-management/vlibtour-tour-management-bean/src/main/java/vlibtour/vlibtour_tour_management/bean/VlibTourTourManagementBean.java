@@ -70,42 +70,44 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 
 	@Override
 	public Tour createTour(String name, Collection<POI> pois) {
-		// Create a new tour
 		Tour tour = new Tour();
 		tour.setName(name);
 		tour.setPois(pois);
-		// Persist the customer
 		em.persist(tour);
-		return tour;
-		
+		return tour;	
+	}
+	@Override
+	public POI createPOI (String name, double latitude,double longitude) {
+		POI poi = new POI();
+		poi.setName(name);
+		poi.setLatitude(latitude);
+		poi.setLongitude(longitude);
+		em.persist(poi);
+		return poi;	
 	}
 
 	@Override
 	public String testInsert() {
 		// Create a new tour
 		Tour tour1 = new Tour();
-		tour1.setId(1);
 		tour1.setName("Paris Tour");
 		// Persist the tour
 		em.persist(tour1);
 		// Create 2 POIs
 		POI poi1 = new POI();
-		poi1.setId(1);
 		poi1.setName("1 Champs-Elysees, Paris, France");
 		POI poi2 = new POI();
-		poi2.setId(2);
 		poi2.setName("99 Main Street, London, UK");
 
-				// Associate POIs with the tours. The association
-				// must be set on both sides of the relationship: on the
-				// tour side for the POIs to be persisted when
-				// transaction commits, and on the order side because it
-				// is the owning side.
-				tour1.getPois().add(poi1);
-				poi1.getTours().add(tour1);
-				tour1.getPois().add(poi2);
-				poi2.getTours().add(tour1);
-				return "OK";	
+	   // Associate POIs with the tours. The association
+	   // must be set on both sides of the relationship: on the
+       // tour side for the POIs to be persisted when
+     	// transaction commits, and on the order side because it			// is the owning side.
+		tour1.getPois().add(poi1);
+		poi1.getTours().add(tour1);
+		tour1.getPois().add(poi2);
+		poi2.getTours().add(tour1);
+		return "OK";	
 	}
 
 	@Override

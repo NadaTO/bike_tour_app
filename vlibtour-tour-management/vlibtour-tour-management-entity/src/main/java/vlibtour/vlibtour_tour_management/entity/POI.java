@@ -26,10 +26,9 @@ import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-
-import vlibtour.vlibtour_visit_emulation.GPSPosition;
 
 /**
  * The entity bean defining a point of interest (POI). A {@link Tour} is a
@@ -48,7 +47,7 @@ public class POI implements Serializable {
 	/**
 	 * id of the POI.
 	 */
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	/**
 	 * the name of the POI.
@@ -63,9 +62,13 @@ public class POI implements Serializable {
 	 */
 	private Collection<Tour> tours ;
 	/**
-	 * the position of the POI.
+	 * the latitude.
 	 */
-	private GPSPosition position;
+	private double latitude;
+	/**
+	 * the longitude.
+	 */
+	private double longitude;
 	/**
 	 * gets the name.
 	 * 
@@ -105,23 +108,42 @@ public class POI implements Serializable {
 		this.description= description;
 	}
 	/**
-	 * gets the position.
+	 * gets the latitude.
 	 * 
-	 * @return the position.
+	 * @return the latitude.
 	 */
 
 
-	public GPSPosition getPosition() {
-		return position;
+	public double getLatitude() {
+		return latitude;
 	}
 	/**
-	 * sets the position.
+	 * gets the longitude.
 	 * 
-	 * @param position
-	 *            the new position.
+	 * @return the longitude.
 	 */
-	public void setPosition(final GPSPosition position) {
-		this.position= position;
+
+
+	public double getLongitude() {
+		return latitude;
+	}
+	/**
+	 * sets the latitude.
+	 * 
+	 * @param latitude
+	 *            the new latitude.
+	 */
+	public void setLatitude(final double latitude) {
+		this.latitude=latitude;
+	}
+	/**
+	 * sets the longitude.
+	 * 
+	 * @param longitude
+	 *            the new longitude.
+	 */
+	public void setLongitude(final double longitude) {
+		this.longitude=longitude;
 	}
 	/**
 	 * gets the identifier.
@@ -133,16 +155,7 @@ public class POI implements Serializable {
 	public int getId() {
 		return id;
 	}
-	/**
-	 * sets the identifier.
-	 * 
-	 * @param id
-	 *            the new identifier.
-	 */
-	public void setId(final int id) {
-		this.id = id;
-	}
-	
+
 	/**
 	 * gets the collection of tours.
 	 * 

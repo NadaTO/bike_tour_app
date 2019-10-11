@@ -29,6 +29,7 @@ import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
@@ -50,7 +51,7 @@ public class Tour implements Serializable {
 	/**
 	 * id of the tour.
 	 */
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	/**
 	 * the name of the tour.
@@ -71,13 +72,6 @@ public class Tour implements Serializable {
 	@Id 
 	public int getId() {
 		return id;
-	}
-	/**
-	 * sets the identifier
-     * @param id
-	 */
-	public void setId(int id) {
-		this.id = id;
 	}
 	/**
 	 * sets the name
