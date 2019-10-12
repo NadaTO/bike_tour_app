@@ -47,6 +47,7 @@ public class POI implements Serializable {
 	/**
 	 * id of the POI.
 	 */
+	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	/**

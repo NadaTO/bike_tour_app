@@ -51,6 +51,7 @@ public class Tour implements Serializable {
 	/**
 	 * id of the tour.
 	 */
+	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	/**
