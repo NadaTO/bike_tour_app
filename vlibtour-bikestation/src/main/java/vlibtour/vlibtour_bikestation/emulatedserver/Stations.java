@@ -63,10 +63,10 @@ public class Stations {
 	}
 
 	/**
-	 * add a skier to the collection.
+	 * add a station to the collection.
 	 * 
 	 * @param station
-	 *            the skier to add.
+	 *            the station to add.
 	 */
 	public void add(final Station station) {
 		stations.add(station);

@@ -77,9 +77,9 @@ public final class StationsRest {
 	 */
 	private void getStationsFromFile(final String fileName) throws JAXBException, IOException {
 		ObjectMapper mapper = new ObjectMapper(); //jackson class for converting from json to java 
-		List stationList; //JSON from file to Object
+		List<Station> stationList; //JSON from file to Object
 		stationList = Arrays.asList(mapper.readValue(new File(fileName), Station[].class)); // get the array of stations and convert to a list
-		Stations stations=new Stations(stationList);// create a Stations instance 
+	    stations=new Stations(stationList);// create a Stations instance 
 	}
 
 
@@ -153,9 +153,9 @@ public final class StationsRest {
 	@GET
 	@Path("/station")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Station agejson(@QueryParam("contract") final String contract,@QueryParam("name") final String name) throws JAXBException, IOException {
+	public Station stationjson(@QueryParam("contract_name") final String contract_name,@QueryParam("name") final String name) throws JAXBException, IOException {
 		getStationsFromFile(fileName);
-		return stations.lookupCity(contract).lookupName(name);
+		return stations.lookupCity(contract_name).lookupName(name);
 	}
 	
 }

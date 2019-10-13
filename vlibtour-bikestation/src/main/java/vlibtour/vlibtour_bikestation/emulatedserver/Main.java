@@ -57,7 +57,7 @@ public final class Main {
 		Properties properties = new Properties();
 		FileInputStream input = new FileInputStream("src/main/resources/rest.properties");
 		properties.load(input);
-		baseURI = properties.getProperty("rest.serveraddress") + "/MyServer/";
+		baseURI = properties.getProperty("jcdecaux.rooturl");
 
 		// create a resource config that scans for JAX-RS resources and providers
 		// in the server package
