@@ -30,6 +30,7 @@ import java.util.Map;
 import javax.ejb.embeddable.EJBContainer;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.validation.constraints.AssertTrue;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -46,6 +47,7 @@ public class TestVlibTourTourManagementBean {
 	
 	private static EJBContainer ec;
 	private static Context ctx;
+	private static VlibTourTourManagement sb;
 	
 	@BeforeClass
 	public static void setUp() throws Exception {
@@ -53,34 +55,49 @@ public class TestVlibTourTourManagementBean {
 	    properties.put(EJBContainer.MODULES, new File("target/classes"));
 	    ec = EJBContainer.createEJBContainer(properties);
 	    ctx = ec.getContext();
+	    sb = (VlibTourTourManagement) ctx.lookup("vlibtour.vlibtour_tour_management.api.VlibTourTourManagement");
 	}
 
 	@Ignore
 	@Test(expected = VlibTourTourManagementException.class)
 	public void createPOITest1() throws Exception {
-		
+		sb.createPOI("", 48.864824, 2.334595);	
 	}
 	
 	@Ignore
 	@Test(expected = VlibTourTourManagementException.class)
 	public void findPOIWithPIDTest1() throws Exception {
+		sb.findPOIWithPID(0);
 	}
 
 	@Ignore
 	@Test
 	public void findAllPOIsWithNameTest1() throws Exception {
+		sb.createPOI("1 Champs-Elysees",48.864824, 2.334595);
+		Collection<POI> c=sb.findAllPOIsWithName("1 Champs-Elysees");
+		Assert.assertEquals(c.size(),1);
+		Assert.assertEquals(c.iterator().next().getName(),"1 Champs-Elysees");
 	}
 
 	@Ignore
 	@Test
 	public void findAllPOIsTest1() throws Exception {
+		Collection <POI> c = new ArrayList <POI>();
+		Collection <POI> c1 = new ArrayList <POI>();
+
+		POI poi1= sb.createPOI("1 Champs-Elysees, Paris, France",48.864824, 2.334595);
+		POI poi2= sb.createPOI("99 Main Street, London, UK",486.864824, 2.334595);
+		c.add(poi1);
+		c.add(poi2);
+		//list pois
+		c1=sb.listPOIs();
+		Assert.assertEquals(c,c1);
 	}
 
    
 	@Test(expected = VlibTourTourManagementException.class)
 	public void createTourTest1() throws Exception {
 		//test tour creation
-		VlibTourTourManagement sb = (VlibTourTourManagement) ctx.lookup("vlibtour.vlibtour_tour_management.api.VlibTourTourManagement");
 
 		POI poi1 = new POI();
 		poi1.setName("1 Champs-Elysees, Paris, France");
@@ -97,16 +114,30 @@ public class TestVlibTourTourManagementBean {
 	@Ignore
 	@Test(expected = VlibTourTourManagementException.class)
 	public void findTourWithTIDTest1() throws Exception {
+		sb.findTourWithTPID(0);
 	}
 
 	@Ignore
 	@Test
 	public void findAllToursWithNameTest1() throws Exception {
+		POI poi1= sb.createPOI("1 Champs-Elysees, Paris, France",48.864824, 2.334595);
+		POI poi2= sb.createPOI("99 Main Street, London, UK",486.864824, 2.334595);
+		Collection<POI> c= new ArrayList<POI>();
+		Collection<Tour> c1= new ArrayList<Tour>();
+
+		c.add(poi1);
+		c.add(poi2);
+		Tour tour1= sb.createTour("Paris Tour", c);
+		c1=sb.findAllToursWithName("Paris Tour");
+
+		Assert.assertEquals(c1.iterator().next().getName(),tour1.getName());
+		
 	}
 
 	@Ignore
 	@Test
 	public void findAllToursTest1() throws Exception {
+		
 	}
 
 	@After
@@ -119,6 +150,16 @@ public class TestVlibTourTourManagementBean {
 
 	@AfterClass
 	public static void tearDownClass() throws Exception {
+		// remove the created attributes 
+		Collection<POI> pois =sb.listPOIs();
+		Collection<Tour> tours=sb.listTours();
+		
+		for (POI poi:pois) {
+			sb.removePOI(poi);
+		}
+		for (Tour tour:tours) {
+			sb.removeTour(tour);
+		}
 	}
 
 }

@@ -47,8 +47,9 @@ public interface VlibTourTourManagement {
 	 * verifies the insertion.
 	 * 
 	 * @return the string "OK" if there is no problem.
+	 * @throws VlibTourTourManagementException 
 	 */
-	String verifyInsert();
+	String verifyInsert() throws VlibTourTourManagementException;
 	/**
 	 * deletes the given tour.
 	 * 
@@ -69,9 +70,11 @@ public interface VlibTourTourManagement {
 	
 	Collection<Tour> listTours();
 	
-	Tour getTour (final String name);
+	Collection<POI> listPOIs();
 	
-	POI getPOI (final String name);
+	Collection<Tour> findAllToursWithName (final String name);
+	
+	Collection<POI> findAllPOIsWithName (final String name);
 	
 	Tour createTour (final String name, final Collection <POI> pois) throws VlibTourTourManagementException;	
 	
@@ -83,4 +86,7 @@ public interface VlibTourTourManagement {
 	
 	void removeTour (Tour tour);
 	
+	POI findPOIWithPID(int id) throws VlibTourTourManagementException;
+	
+	Tour findTourWithTPID(int id) throws VlibTourTourManagementException;
 }

@@ -56,19 +56,28 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 		Collection<Tour> results = q.getResultList();
 		return results;		
 	}
-
-	@Override
-	public Tour getTour(String name) {
-		Query q = em.createQuery("select t from Tour t where t.name = :name");
-		q.setParameter("name", name);
-		return (Tour) q.getSingleResult();
+	
+	public Collection<POI> listPOIs(){
+		Query q = em.createQuery("select p from POI p");
+		@SuppressWarnings("unchecked")
+		Collection<POI> results = q.getResultList();
+		return results;		
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public POI getPOI(String name) {
+	public Collection<Tour> findAllToursWithName (String name) {
+		Query q = em.createQuery("select t from Tour t where t.name = :name");
+		q.setParameter("name", name);
+		return (Collection<Tour>) q.getSingleResult();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Collection<POI> findAllPOIsWithName(String name) {
 		Query q = em.createQuery("select p from POI p where p.name = :name");
 		q.setParameter("name", name);
-		return (POI) q.getSingleResult();
+		return (Collection<POI>) q.getSingleResult();
 	}
 
 	@Override
@@ -86,6 +95,8 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 	}
 	@Override
 	public POI createPOI (String name, double latitude,double longitude) throws VlibTourTourManagementException {
+		if (name.equals("") || name.isEmpty()|| latitude==0 || longitude==0)
+			throw new VlibTourTourManagementException ("POI attributes must be valid empty");
 		POI poi = new POI();
 		poi.setName(name);
 		poi.setLatitude(latitude);
@@ -110,6 +121,25 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 		em.remove(t0);
 	}
 	
+	
+	@Override
+	public POI findPOIWithPID(int id) throws VlibTourTourManagementException {
+		if (id==0)
+			throw new VlibTourTourManagementException ("POI id isempty");
+		Query q = em.createQuery("select p from POI p where p.id = :id");
+		q.setParameter("id", id);
+		return (POI) q.getSingleResult();
+	}
+	
+	@Override
+	public Tour findTourWithTPID(int id) throws VlibTourTourManagementException {
+		if (id==0)
+			throw new VlibTourTourManagementException ("Tour id is empty");
+		Query q = em.createQuery("select t from Tour t where t.id = :id");
+		q.setParameter("id", id);
+		return (Tour) q.getSingleResult();
+	}
+
 	@Override
 	public String testInsert() {
 		// Create a new tour
@@ -127,21 +157,19 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
         Collection<POI> c= new ArrayList<POI>();
         c.add(poi1);
         c.add(poi2);
-	   // Associate POIs with the tours. The association
-	   // must be set on both sides of the relationship: on the
-       // tour side for the POIs to be persisted when
-     	// transaction commits, and on the order side because it			
-		// is the owning side.
 		tour1.setPois(c);
-		//poi1.getTours().add(tour1);
-		//poi2.getTours().add(tour1);
+		
 		return "OK";	
 	}
 
 	@Override
-	public String verifyInsert() {
-		Tour c = getTour("Paris Tour");
-		Collection<POI> orders = c.getPois();
+	public String verifyInsert() throws VlibTourTourManagementException {
+	
+		Collection<Tour> c = findAllToursWithName("Paris Tour");
+		if (c.size()!=0)
+			throw new VlibTourTourManagementException ("Unexpected number of tours with same name");
+		Tour tour1 = c.iterator().next();
+		Collection<POI> orders = tour1.getPois();
 		if (orders == null || orders.size() != 2) {
 			throw new RuntimeException(
 					"Unexpected number of orders: " + ((orders == null) ? "null" : "" + orders.size()));
@@ -151,14 +179,7 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 
 	@Override
 	public String testDeleteTour(Tour t) {
-		/*for (POI poi: t.getPois())
-		{
-			POI p0=em.merge(poi);
-			em.remove(p0);
-		}*/
 		Tour t0 = em.merge(t);
-		// Delete all records.
-		
 		em.remove(t0);
 		
 		return "OK";
@@ -174,7 +195,6 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 		return "OK";
 	}
 	
-
 	@Override
 	public String verifyDeleteTour() {
 		// TODO Auto-generated method stub
@@ -184,11 +204,6 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 		if (results == null || results.size() != 0) {
 			throw new RuntimeException("Unexpected number of tours after delete results : " + results.size());
 		}
-		/*q = em.createQuery("select p from POI p");
-		results = q.getResultList();
-		if (results == null || results.size() != 0) {
-			throw new RuntimeException("Unexpected number of pois after delete");
-		}*/
 		return "OK";	
 	}
 	
