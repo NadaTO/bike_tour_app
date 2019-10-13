@@ -191,7 +191,25 @@ public POI() {
 	}
 	
 	public String toString() {
-	      return "[ POI, id"+ id + ",name" + name +",latitude"+latitude+",longitude"+longitude+"]";
+	      return "[ POI, id: "+ id + ",name: " + name +",latitude: "+latitude+",longitude: "+longitude+"]";
 	   }
+	
+	@Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        POI poi = (POI) obj;
+        return id == poi.id
+                && ((name != null) && (name.equals(poi.getName()))
+                 && (latitude == poi.latitude)
+                && (longitude == poi.longitude));
+    }
+
+
 
 }

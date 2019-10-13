@@ -123,10 +123,6 @@ public class Tour implements Serializable {
 	 * 
 	 * @return the pois.
 	 */
-	//@ManyToMany(mappedBy="tours")
-	/*@JoinTable(table = @Table(name = "tour_poi"),
-    joinColumns = {@JoinColumn(name = "tour_id")},
-    inverseJoinColumns = {@JoinColumn(name = "poi_id")})*/
 	public Collection<POI> getPois() {
 		return pois;
 	}
@@ -140,7 +136,7 @@ public class Tour implements Serializable {
 	}
 	
 	 public String toString() {
-	      return "[ Tour, id"+ id + ",name" + name +"]";
+	      return "[ Tour, id: "+ id + ",name: " + name +"]";
 	   }
 		
 }

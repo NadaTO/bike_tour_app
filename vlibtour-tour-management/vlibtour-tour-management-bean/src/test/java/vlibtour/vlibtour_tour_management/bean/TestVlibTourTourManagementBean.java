@@ -58,19 +58,19 @@ public class TestVlibTourTourManagementBean {
 	    sb = (VlibTourTourManagement) ctx.lookup("vlibtour.vlibtour_tour_management.api.VlibTourTourManagement");
 	}
 
-	@Ignore
+	
 	@Test(expected = VlibTourTourManagementException.class)
 	public void createPOITest1() throws Exception {
 		sb.createPOI("", 48.864824, 2.334595);	
 	}
 	
-	@Ignore
+	
 	@Test(expected = VlibTourTourManagementException.class)
 	public void findPOIWithPIDTest1() throws Exception {
 		sb.findPOIWithPID(0);
 	}
 
-	@Ignore
+	
 	@Test
 	public void findAllPOIsWithNameTest1() throws Exception {
 		sb.createPOI("1 Champs-Elysees",48.864824, 2.334595);
@@ -79,7 +79,7 @@ public class TestVlibTourTourManagementBean {
 		Assert.assertEquals(c.iterator().next().getName(),"1 Champs-Elysees");
 	}
 
-	@Ignore
+	
 	@Test
 	public void findAllPOIsTest1() throws Exception {
 		Collection <POI> c = new ArrayList <POI>();
@@ -90,8 +90,8 @@ public class TestVlibTourTourManagementBean {
 		c.add(poi1);
 		c.add(poi2);
 		//list pois
-		c1=sb.listPOIs();
-		Assert.assertEquals(c,c1);
+		c1=new ArrayList<POI>(sb.listPOIs());
+		Assert.assertArrayEquals(c.toArray(),c1.toArray());
 	}
 
    
@@ -111,13 +111,13 @@ public class TestVlibTourTourManagementBean {
 		
 	}
 
-	@Ignore
+
 	@Test(expected = VlibTourTourManagementException.class)
 	public void findTourWithTIDTest1() throws Exception {
 		sb.findTourWithTPID(0);
 	}
 
-	@Ignore
+    
 	@Test
 	public void findAllToursWithNameTest1() throws Exception {
 		POI poi1= sb.createPOI("1 Champs-Elysees, Paris, France",48.864824, 2.334595);
@@ -142,24 +142,25 @@ public class TestVlibTourTourManagementBean {
 
 	@After
 	public void tearDown() throws Exception {
-		if (ec != null) {
-			ec.close();
-		}
-	}
+		
+		// remove the created attributes 
+				Collection<POI> pois =sb.listPOIs();
+				Collection<Tour> tours=sb.listTours();
+				
+				for (POI poi:pois) {
+					sb.removePOI(poi);
+				}
+				for (Tour tour:tours) {
+					sb.removeTour(tour);
+				}
+			}
+	
 	
 
 	@AfterClass
 	public static void tearDownClass() throws Exception {
-		// remove the created attributes 
-		Collection<POI> pois =sb.listPOIs();
-		Collection<Tour> tours=sb.listTours();
-		
-		for (POI poi:pois) {
-			sb.removePOI(poi);
-		}
-		for (Tour tour:tours) {
-			sb.removeTour(tour);
+		if (ec != null) {
+			ec.close();
 		}
 	}
-
 }

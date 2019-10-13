@@ -69,7 +69,7 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 	public Collection<Tour> findAllToursWithName (String name) {
 		Query q = em.createQuery("select t from Tour t where t.name = :name");
 		q.setParameter("name", name);
-		return (Collection<Tour>) q.getSingleResult();
+		return (Collection<Tour>) q.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -77,7 +77,7 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 	public Collection<POI> findAllPOIsWithName(String name) {
 		Query q = em.createQuery("select p from POI p where p.name = :name");
 		q.setParameter("name", name);
-		return (Collection<POI>) q.getSingleResult();
+		return (Collection<POI>)  q.getResultList();
 	}
 
 	@Override
@@ -133,7 +133,7 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 	
 	@Override
 	public Tour findTourWithTPID(int id) throws VlibTourTourManagementException {
-		if (id==0)
+		if (id == 0)
 			throw new VlibTourTourManagementException ("Tour id is empty");
 		Query q = em.createQuery("select t from Tour t where t.id = :id");
 		q.setParameter("id", id);
