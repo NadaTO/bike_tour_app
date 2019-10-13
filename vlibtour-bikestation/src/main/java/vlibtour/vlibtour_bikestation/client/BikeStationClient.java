@@ -64,7 +64,8 @@ public final class BikeStationClient {
 		Client client = ClientBuilder.newClient();
 		URI uri = UriBuilder.fromUri(restURI).build();
 		WebTarget service = client.target(uri);
-		Station station = service.path("/stations").queryParam("contract","lyon").queryParam("apiKey","e282afdd13aca4cba4fb50.5603d5224d4a9cad03").queryParam("number","2010").request().accept(MediaType.APPLICATION_JSON).get(Station.class);
+		//Station station = service.path("/stations").queryParam("contract","lyon").queryParam("apiKey","e282afdd13aca4cba4fb50.5603d5224d4a9cad03").queryParam("number","2010").request().accept(MediaType.APPLICATION_JSON).get(Station.class);
+		Station station = service.path("stations/station/").queryParam("contract_name","Paris").queryParam("name","31705 - CHAMPEAUX (BAGNOLET)").request().accept(MediaType.APPLICATION_JSON).get().readEntity(Station.class);
 		System.out.println("station infos : \n"+ station.toString());
 	}
 	
