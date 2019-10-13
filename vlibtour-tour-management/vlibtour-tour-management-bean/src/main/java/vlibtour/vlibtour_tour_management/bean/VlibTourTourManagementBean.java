@@ -73,8 +73,8 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 
 	@Override
 	public Tour createTour (String name, Collection<POI> pois) throws VlibTourTourManagementException {
-		if (getTour(name)!= null)
-			throw new VlibTourTourManagementException ("Tour already exists");
+		/*if (getTour(name)!= null)
+			throw new VlibTourTourManagementException ("Tour already exists");*/
 		if (name.equals("") || name.isEmpty())
 			throw new VlibTourTourManagementException ("Tour name is empty");
 		

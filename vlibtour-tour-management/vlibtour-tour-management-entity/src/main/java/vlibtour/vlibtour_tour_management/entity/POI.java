@@ -29,6 +29,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 /**
  * The entity bean defining a point of interest (POI). A {@link Tour} is a
@@ -39,7 +40,9 @@ import javax.persistence.ManyToMany;
  * @author Denis Conan
  */
 @Entity
+@Table(name="poi")
 public class POI implements Serializable {
+	
 	/**
 	 * the serial version UID.
 	 */
@@ -61,6 +64,7 @@ public class POI implements Serializable {
 	/**
 	 * the collection of corresponding tour.
 	 */
+	@ManyToMany(mappedBy = "pois")
 	private Collection<Tour> tours ;
 	/**
 	 * the latitude.
@@ -75,7 +79,16 @@ public class POI implements Serializable {
 	 * 
 	 * @return the name.
 	 */
-
+public POI() {
+		
+	}
+	
+    public POI(String name, String description,double latitude, double longitude) {
+		this.name=name;
+		this.description=description;
+		this.latitude=latitude;
+		this.longitude=longitude;
+	}
 
 	public String getName() {
 		return name;
@@ -163,7 +176,7 @@ public class POI implements Serializable {
 	 * @return the tour.
 	 */
 
-	@ManyToMany()
+	
 	public Collection<Tour> getTours() {
 		return tours;
 	}
@@ -176,5 +189,9 @@ public class POI implements Serializable {
 	public void setTour(final Collection<Tour> tours) {
 		this.tours = tours;
 	}
+	
+	public String toString() {
+	      return "[ POI, id"+ id + ",name" + name +",latitude"+latitude+",longitude"+longitude+"]";
+	   }
 
 }

@@ -27,12 +27,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * The entity bean defining a tour in the VLibTour case study. A tour is a
@@ -43,6 +49,7 @@ import javax.persistence.OneToMany;
  * @author Denis Conan
  */
 @Entity
+@Table(name="tour")
 public class Tour implements Serializable {
 	/**
 	 * the serial version UID.
@@ -52,6 +59,7 @@ public class Tour implements Serializable {
 	 * id of the tour.
 	 */
 	@Id
+	@Column(name="tour_id")
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	/**
@@ -65,6 +73,7 @@ public class Tour implements Serializable {
 	/**
 	 * the collection of POIs
 	 */
+	@ManyToMany()
 	private Collection<POI> pois = new ArrayList <POI>();
 	/**
 	 * gets the identifier
@@ -114,7 +123,10 @@ public class Tour implements Serializable {
 	 * 
 	 * @return the pois.
 	 */
-	@ManyToMany()	
+	//@ManyToMany(mappedBy="tours")
+	/*@JoinTable(table = @Table(name = "tour_poi"),
+    joinColumns = {@JoinColumn(name = "tour_id")},
+    inverseJoinColumns = {@JoinColumn(name = "poi_id")})*/
 	public Collection<POI> getPois() {
 		return pois;
 	}
@@ -126,5 +138,9 @@ public class Tour implements Serializable {
 	public void setPois(Collection<POI> pois) {
 		this.pois = pois;
 	}
+	
+	 public String toString() {
+	      return "[ Tour, id"+ id + ",name" + name +"]";
+	   }
 		
 }

@@ -76,7 +76,7 @@ public class TestVlibTourTourManagementBean {
 	public void findAllPOIsTest1() throws Exception {
 	}
 
-   
+ 
 	@Test(expected = VlibTourTourManagementException.class)
 	public void createTourTest1() throws Exception {
 		//test tour creation
@@ -90,7 +90,7 @@ public class TestVlibTourTourManagementBean {
 		c.add(poi1);
 		c.add(poi2);
 		
-	    sb.createTour("",c);
+	    //sb.createTour("",c);
 		
 	}
 
