@@ -21,9 +21,14 @@ Contributor(s):
  */
 package vlibtour.vlibtour_tour_management.bean;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.ejb.embeddable.EJBContainer;
+import javax.naming.Context;
 import javax.naming.InitialContext;
 
 import org.junit.After;
@@ -38,18 +43,16 @@ import vlibtour.vlibtour_tour_management.entity.Tour;
 import vlibtour.vlibtour_tour_management.entity.VlibTourTourManagementException;
 
 public class TestVlibTourTourManagementBean {
-	private static VlibTourTourManagement sb;
+	
+	private static EJBContainer ec;
+	private static Context ctx;
 	
 	@BeforeClass
-	public static void setUpClass() throws Exception {
-		try {
-			InitialContext ic = new InitialContext();
-			sb = (VlibTourTourManagement) ic.lookup("vlibtour.vlibtour_tour_management.api.VlibTourTourManagement");
-			//System.out.println("Inserting POIs and Tours... " + sb.testInsert());
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+	public static void setUp() throws Exception {
+	    Map<String, Object> properties = new HashMap<String, Object>();
+	    properties.put(EJBContainer.MODULES, new File("target/classes"));
+	    ec = EJBContainer.createEJBContainer(properties);
+	    ctx = ec.getContext();
 	}
 
 	@Ignore
@@ -73,11 +76,12 @@ public class TestVlibTourTourManagementBean {
 	public void findAllPOIsTest1() throws Exception {
 	}
 
-	@Ignore
+	@Ignore 
 	@Test(expected = VlibTourTourManagementException.class)
 	public void createTourTest1() throws Exception {
 		//test tour creation
-		
+		VlibTourTourManagement sb = (VlibTourTourManagement) ctx.lookup("vlibtour.vlibtour_tour_management.api.VlibTourTourManagement");
+
 		POI poi1 = new POI();
 		poi1.setName("1 Champs-Elysees, Paris, France");
 		POI poi2 = new POI();
@@ -86,7 +90,7 @@ public class TestVlibTourTourManagementBean {
 		c.add(poi1);
 		c.add(poi2);
 		
-	    Tour t =sb.createTour("",c);
+	    sb.createTour("",c);
 		
 	}
 
@@ -107,7 +111,11 @@ public class TestVlibTourTourManagementBean {
 
 	@After
 	public void tearDown() throws Exception {
+		if (ec != null) {
+			ec.close();
+		}
 	}
+	
 
 	@AfterClass
 	public static void tearDownClass() throws Exception {
