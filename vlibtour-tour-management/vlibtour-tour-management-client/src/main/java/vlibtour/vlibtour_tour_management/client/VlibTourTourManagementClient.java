@@ -25,7 +25,6 @@ import javax.naming.InitialContext;
 
 
 import vlibtour.vlibtour_tour_management.api.VlibTourTourManagement;
-import vlibtour.vlibtour_tour_management.entity.POI;
 import vlibtour.vlibtour_tour_management.entity.Tour;
 
 /**

@@ -210,9 +210,9 @@ public class VLibTourVisitTouristApplication {
 			// Get a detached instance
 			t = sb.getTour("Paris Tour");
 			// Remove entity
-			System.out.println("Removing entity... " + sb.testDelete(t));
+			System.out.println("Removing entity... " + sb.testDeleteTour(t));
 			// Query the results
-			System.out.println("Verifying that all are removed... " + sb.verifyDelete());
+			System.out.println("Verifying that all are removed... " + sb.verifyDeleteTour());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
