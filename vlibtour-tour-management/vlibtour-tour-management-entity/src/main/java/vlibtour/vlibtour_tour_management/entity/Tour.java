@@ -126,8 +126,5 @@ public class Tour implements Serializable {
 	public void setPois(Collection<POI> pois) {
 		this.pois = pois;
 	}
-	
-	
-	
-	
+		
 }

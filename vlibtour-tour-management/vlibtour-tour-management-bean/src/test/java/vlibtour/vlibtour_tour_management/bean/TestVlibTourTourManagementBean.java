@@ -45,7 +45,7 @@ public class TestVlibTourTourManagementBean {
 		try {
 			InitialContext ic = new InitialContext();
 			sb = (VlibTourTourManagement) ic.lookup("vlibtour.vlibtour_tour_management.api.VlibTourTourManagement");
-			System.out.println("Inserting POIs and Tours... " + sb.testInsert());
+			//System.out.println("Inserting POIs and Tours... " + sb.testInsert());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -73,7 +73,7 @@ public class TestVlibTourTourManagementBean {
 	public void findAllPOIsTest1() throws Exception {
 	}
 
-	
+	@Ignore
 	@Test(expected = VlibTourTourManagementException.class)
 	public void createTourTest1() throws Exception {
 		//test tour creation
@@ -86,7 +86,7 @@ public class TestVlibTourTourManagementBean {
 		c.add(poi1);
 		c.add(poi2);
 		
-	    Tour t=sb.createTour("",c);
+	    Tour t =sb.createTour("",c);
 		
 	}
 

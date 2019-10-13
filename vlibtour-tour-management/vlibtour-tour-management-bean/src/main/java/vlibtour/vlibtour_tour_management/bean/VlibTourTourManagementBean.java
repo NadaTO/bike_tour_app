@@ -21,6 +21,7 @@ Contributor(s):
  */
 package vlibtour.vlibtour_tour_management.bean;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -28,6 +29,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
+
 import vlibtour.vlibtour_tour_management.api.VlibTourTourManagement;
 import vlibtour.vlibtour_tour_management.entity.POI;
 import vlibtour.vlibtour_tour_management.entity.Tour;
@@ -119,15 +122,19 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 		poi1.setName("1 Champs-Elysees, Paris, France");
 		POI poi2 = new POI();
 		poi2.setName("99 Main Street, London, UK");
-
+		em.persist(poi1);
+		em.persist(poi2);
+        Collection<POI> c= new ArrayList<POI>();
+        c.add(poi1);
+        c.add(poi2);
 	   // Associate POIs with the tours. The association
 	   // must be set on both sides of the relationship: on the
        // tour side for the POIs to be persisted when
-     	// transaction commits, and on the order side because it			// is the owning side.
-		tour1.getPois().add(poi1);
-		poi1.getTours().add(tour1);
-		tour1.getPois().add(poi2);
-		poi2.getTours().add(tour1);
+     	// transaction commits, and on the order side because it			
+		// is the owning side.
+		tour1.setPois(c);
+		//poi1.getTours().add(tour1);
+		//poi2.getTours().add(tour1);
 		return "OK";	
 	}
 
@@ -143,15 +150,57 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 	}
 
 	@Override
-	public String testDelete(Tour t) {
-		// TODO Auto-generated method stub
-		return null;
+	public String testDeleteTour(Tour t) {
+		/*for (POI poi: t.getPois())
+		{
+			POI p0=em.merge(poi);
+			em.remove(p0);
+		}*/
+		Tour t0 = em.merge(t);
+		// Delete all records.
+		
+		em.remove(t0);
+		
+		return "OK";
 	}
+	
+	@Override
+	public String testDeletePoi(POI p) {
+		POI p0 = em.merge(p);
+		// Delete all records.
+		
+		em.remove(p0);
+		
+		return "OK";
+	}
+	
 
 	@Override
-	public String verifyDelete() {
+	public String verifyDeleteTour() {
 		// TODO Auto-generated method stub
-		return null;
+		Query q = em.createQuery("select t from Tour t");
+		@SuppressWarnings("rawtypes")
+		List results = q.getResultList();
+		if (results == null || results.size() != 0) {
+			throw new RuntimeException("Unexpected number of tours after delete results : " + results.size());
+		}
+		/*q = em.createQuery("select p from POI p");
+		results = q.getResultList();
+		if (results == null || results.size() != 0) {
+			throw new RuntimeException("Unexpected number of pois after delete");
+		}*/
+		return "OK";	
+	}
+	
+	@Override
+	public String verifyDeletePoi() {
+		Query q = em.createQuery("select p from POI p");
+		  @SuppressWarnings("rawtypes")
+		List results = q.getResultList();
+		if (results == null || results.size() != 0) {
+			throw new RuntimeException("Unexpected number of pois after delete");
+		}
+		return "OK";
 	}
 	
 }

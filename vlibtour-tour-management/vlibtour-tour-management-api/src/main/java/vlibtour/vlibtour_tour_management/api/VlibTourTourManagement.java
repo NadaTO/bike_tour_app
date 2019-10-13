@@ -56,14 +56,16 @@ public interface VlibTourTourManagement {
 	 *            the tour and the associated pois.
 	 * @return the string "OK" if there is no problem.
 	 */
-	String testDelete(Tour t);
+	String testDeleteTour(Tour t);
+	String testDeletePoi(POI  p);
 
 	/**
 	 * verifies the deletion.
 	 * 
 	 * @return the string "OK" if there is no problem.
 	 */
-	String verifyDelete();
+	String verifyDeleteTour();
+	String verifyDeletePoi();
 	
 	Collection<Tour> listTours();
 	

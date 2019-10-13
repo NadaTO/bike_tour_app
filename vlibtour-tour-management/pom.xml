@@ -42,5 +42,6 @@ Contributor(s):
     <module>vlibtour-tour-management-entity</module>
     <module>vlibtour-tour-management-api</module>
     <module>vlibtour-tour-management-bean</module>
+    <module>vlibtour-tour-management-client</module>
   </modules>
 </project>
