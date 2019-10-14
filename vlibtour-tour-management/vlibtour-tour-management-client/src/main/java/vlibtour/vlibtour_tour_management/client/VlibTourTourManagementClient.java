@@ -28,9 +28,10 @@ import vlibtour.vlibtour_tour_management.api.VlibTourTourManagement;
 import vlibtour.vlibtour_tour_management.entity.Tour;
 
 /**
- * This class defines the exception thrown when managing POI and tour.
+ * This class defines the client that manages POI and tour for testing concerns.
  * 
- * @author Denis Conan
+ * @author Nada Touil
+ * @author Farah Kilani
  */
 public class VlibTourTourManagementClient {
 	/**
@@ -52,20 +53,15 @@ public class VlibTourTourManagementClient {
 		try {
 			InitialContext ic = new InitialContext();
 			sb = (VlibTourTourManagement) ic.lookup("vlibtour.vlibtour_tour_management.api.VlibTourTourManagement");
-			/*System.out.println("Inserting tour and pois... " + sb.testInsert());
+			System.out.println("Inserting tour and pois... " + sb.testInsert());
 			// Test query and navigation
 			System.out.println("Verifying that all are inserted... " + sb.verifyInsert());
 			// Get a detached instance
-			//t = sb.getTour("Paris Tour");
-			/*for(POI p: t.getPois()) {
-				System.out.println("Removing entity Tour... " + sb.testDeletePoi(p));
-			}
-			
-			System.out.println("Verifying that all pois are removed... " + sb.verifyDeletePoi());
+			t = sb.findAllToursWithName("Paris Tour").iterator().next();
 			// Remove entity Tour
-			//System.out.println("Removing entity Tour... " + sb.testDeleteTour(t));
+			System.out.println("Removing entity Tour... " + sb.testDeleteTour(t));
 			// Query the results
-			System.out.println("Verifying that all tours are removed... " + sb.verifyDeleteTour());*/
+			System.out.println("Verifying that all tours are removed... " + sb.verifyDeleteTour());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

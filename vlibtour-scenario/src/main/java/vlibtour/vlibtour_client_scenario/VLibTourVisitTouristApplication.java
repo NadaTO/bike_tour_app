@@ -199,23 +199,6 @@ public class VLibTourVisitTouristApplication {
 			}
 		});
 		
-		VlibTourTourManagement sb;
-		Tour t;
-		try {
-			InitialContext ic = new InitialContext();
-			sb = (VlibTourTourManagement) ic.lookup("vlibtour.vlibtour_management_api.VlibTourTourManagement");
-			System.out.println("Inserting Customer and Orders... " + sb.testInsert());
-			// Test query and navigation
-			System.out.println("Verifying that all are inserted... " + sb.verifyInsert());
-			// Get a detached instance
-		//	t = sb.getTour("Paris Tour");
-			// Remove entity
-			//System.out.println("Removing entity... " + sb.testDeleteTour(t));
-			// Query the results
-			System.out.println("Verifying that all are removed... " + sb.verifyDeleteTour());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		// start the consumption of messages (e.g. positions of group members) from the group communication system 
 		// TODO
 		// repainting # approximately 3s => delay only non-leader clients => not all

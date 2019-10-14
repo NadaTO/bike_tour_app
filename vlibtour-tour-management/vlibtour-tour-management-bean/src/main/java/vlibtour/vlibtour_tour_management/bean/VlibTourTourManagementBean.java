@@ -166,8 +166,8 @@ public class VlibTourTourManagementBean implements VlibTourTourManagement {
 	public String verifyInsert() throws VlibTourTourManagementException {
 	
 		Collection<Tour> c = findAllToursWithName("Paris Tour");
-		if (c.size()!=0)
-			throw new VlibTourTourManagementException ("Unexpected number of tours with same name");
+		if (c.size() == 0)
+			throw new VlibTourTourManagementException ("Unexpected number of tours , Tour Paris Tour should be created ");
 		Tour tour1 = c.iterator().next();
 		Collection<POI> orders = tour1.getPois();
 		if (orders == null || orders.size() != 2) {

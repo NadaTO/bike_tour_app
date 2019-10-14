@@ -25,6 +25,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.ejb.embeddable.EJBContainer;
@@ -134,9 +135,25 @@ public class TestVlibTourTourManagementBean {
 		
 	}
 
-	@Ignore
+	
 	@Test
 	public void findAllToursTest1() throws Exception {
+		POI poi1= sb.createPOI("1 Champs-Elysees, Paris, France",48.864824, 2.334595);
+		POI poi2= sb.createPOI("99 Main Street, London, UK",486.864824, 2.334595);
+		Collection<POI> c= new ArrayList<POI>();
+		Collection<Tour> c1= new ArrayList<Tour>();
+
+		c.add(poi1);
+		c.add(poi2);
+		Tour tour1= sb.createTour("Tour1", c);
+		Tour tour2= sb.createTour("Tour2", c);
+		c1=sb.listTours();
+		Assert.assertTrue(c1.size()==2);
+		Iterator<Tour> it =c1.iterator();
+		Assert.assertEquals(it.next(),tour1);
+		if (it.hasNext()) {
+		Assert.assertEquals(it.next(),tour2);
+		}
 		
 	}
 

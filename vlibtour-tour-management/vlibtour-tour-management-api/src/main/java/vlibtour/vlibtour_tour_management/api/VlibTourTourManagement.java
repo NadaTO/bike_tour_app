@@ -53,40 +53,100 @@ public interface VlibTourTourManagement {
 	/**
 	 * deletes the given tour.
 	 * 
-	 * @param t
-	 *            the tour and the associated pois.
+	 * @param t  the tour.
 	 * @return the string "OK" if there is no problem.
 	 */
 	String testDeleteTour(Tour t);
+	/**
+	 * deletes the given poi.
+	 * 
+	 * @param p  the poi.
+	 * @return the string "OK" if there is no problem.
+	 */
 	String testDeletePoi(POI  p);
 
 	/**
-	 * verifies the deletion.
+	 * verifies the deletion of the tour.
 	 * 
 	 * @return the string "OK" if there is no problem.
 	 */
 	String verifyDeleteTour();
+	/**
+	 * verifies the deletion of the poi.
+	 * 
+	 * @return the string "OK" if there is no problem.
+	 */
 	String verifyDeletePoi();
-	
+	/**
+	 * list existing tours.
+	 * 
+	 * @return the collection of the existing tours .
+	 */
 	Collection<Tour> listTours();
-	
+	/**
+	 * list existing pois.
+	 * 
+	 * @return the collection of the existing pois .
+	 */
 	Collection<POI> listPOIs();
-	
-	Collection<Tour> findAllToursWithName (final String name);
-	
-	Collection<POI> findAllPOIsWithName (final String name);
-	
-	Tour createTour (final String name, final Collection <POI> pois) throws VlibTourTourManagementException;	
-	
-	POI createPOI (String name, double latitude,double longitude) throws VlibTourTourManagementException;
-	
-	void removePOI (POI poi);
-	
-	void removePOIFromTour (POI poi , Tour tour);
-	
-	void removeTour (Tour tour);
-	
+	/**
+	 * list existing tours with a specific name.
+	 * @param name name of the searched tour.
+	 * @return the collection of the existing tours with a specific name .
+	 */
+	Collection<Tour> findAllToursWithName(String name);
+	/**
+	 * list existing pois with a specific name.
+	 * @param name name of the searched poi.
+	 * @return the collection of the existing pois with a specific name .
+	 */
+	Collection<POI> findAllPOIsWithName(String name);
+
+	/**
+	 *  create a tour .
+	 * @param name name of the tour to create.
+	 * @param pois collection of pois that constitute the tour.
+	 * @return tour created
+	 * @throws VlibTourTourManagementException exception.
+	 */
+	Tour createTour(String name, Collection<POI> pois) throws VlibTourTourManagementException;	
+	/**
+	 * create a poi .
+	 * @param name name of the poi.
+	 * @param latitude  latitude de poi.
+	 * @param longitude  longitude de poi.
+	 * @return the created tour .
+	 * @throws VlibTourTourManagementException exception.
+	 */
+	POI createPOI(String name, double latitude, double longitude) throws VlibTourTourManagementException;
+	/**
+	 * remove a poi .
+	 * @param  poi to be removed.
+	 */
+	void removePOI(POI poi);
+	/**
+	 * remove a poi  from a tour .
+	 * @param  poi to be removed.
+	 * @param tour related to the poi to be removed
+	 */
+	void removePOIFromTour(POI poi, Tour tour);
+	/**
+	 * remove a tour .
+	 * @param  tour to be removed.
+	 */
+	void removeTour(Tour tour);
+	/**
+	 * find a poi with its id .
+	 * @param id  id of the poi to be removed.
+	 * @throws VlibTourTourManagementException exception.
+	 * @return poi found with specified id.
+	 */
 	POI findPOIWithPID(int id) throws VlibTourTourManagementException;
-	
+	/**
+	 * find a tour with its id .
+	 * @param id  id of the tour to be removed.
+	 * @throws VlibTourTourManagementException exception.
+	 * @return tour found with specified id.
+	 */
 	Tour findTourWithTPID(int id) throws VlibTourTourManagementException;
 }

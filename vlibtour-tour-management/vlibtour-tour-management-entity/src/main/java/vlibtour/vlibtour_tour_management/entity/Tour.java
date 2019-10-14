@@ -138,5 +138,19 @@ public class Tour implements Serializable {
 	 public String toString() {
 	      return "[ Tour, id: "+ id + ",name: " + name +"]";
 	   }
+	 
+	 @Override
+	    public boolean equals(Object obj) {
+	        if (obj == this) {
+	            return true;
+	        }
+	        if (obj == null || obj.getClass() != this.getClass()) {
+	            return false;
+	        }
+
+	        Tour tour = (Tour) obj;
+	        return id == tour.id
+	                && ((name != null) && (name.equals(tour.getName())));
+	    }
 		
 }
