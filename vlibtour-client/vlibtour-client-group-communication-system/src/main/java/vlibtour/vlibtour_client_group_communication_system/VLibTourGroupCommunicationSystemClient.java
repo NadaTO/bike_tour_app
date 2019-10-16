@@ -47,6 +47,8 @@ public class VLibTourGroupCommunicationSystemClient {
 	private String routingKey ;
 	private String bindingKey;
 	private Consumer consumer;
+	private Connection connection;
+	private int nbMsgReceived = 0;
 	
 	public VLibTourGroupCommunicationSystemClient (String userId , String groupId , String tourId ) throws IOException, TimeoutException {
 		
@@ -54,11 +56,11 @@ public class VLibTourGroupCommunicationSystemClient {
 	    factory.setHost("localhost");
 	    Connection connection = factory.newConnection();
 	    channel = connection.createChannel(); 
-	    EXCHANGE_NAME= groupId+userId;
+	    EXCHANGE_NAME= groupId + '_' ;
         channel.exchangeDeclare(EXCHANGE_NAME, "topic");
-	    queueName = tourId+"_"+userId;
+	    queueName = tourId + "_" + userId;
 	    routingKey = userId+"."+"all"+"."+String.class;
-	    bindingKey =tourId+"_"+userId;
+	    bindingKey ="*.all|"+queueName+".#";
 	    
 	}
 	
@@ -69,7 +71,7 @@ public class VLibTourGroupCommunicationSystemClient {
 
     public  void addConsumer(Consumer consumer) {
     	
-    	  consumer = new DefaultConsumer(channel);
+    	 // consumer = new DefaultConsumer(channel);
     	  this.consumer=consumer;
     }
     
@@ -79,6 +81,38 @@ public class VLibTourGroupCommunicationSystemClient {
     }
     
     
+    public Channel getChannel() {
+    	return channel;
+    }
     
+    
+    /**
+	 * gets the number of messages received by this consumer.
+	 * 
+	 * @return the number of messages.
+	 */
+	public int getNbMsgReceived() {
+		return nbMsgReceived;
+	}
+	
+	public void incrementNbMsgReceived() {
+		nbMsgReceived++;
+	}
+    /**
+	 * closes the channel and the connection with the broker.
+	 * 
+	 * @throws IOException
+	 *             communication problem.
+	 * @throws TimeoutException
+	 *             broker to long to communicate with.
+	 */
+	public void close() throws IOException, TimeoutException {
+		if (channel != null) {
+			channel.close();
+		}
+		if (connection != null) {
+			connection.close();
+		}
+	}
 	
 }

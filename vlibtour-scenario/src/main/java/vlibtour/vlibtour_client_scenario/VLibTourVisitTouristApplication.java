@@ -27,6 +27,7 @@ import static vlibtour.vlibtour_visit_emulation.Log.LOG_ON;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 
@@ -35,6 +36,10 @@ import javax.naming.NamingException;
 
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Consumer;
+import com.rabbitmq.client.DefaultConsumer;
+import com.rabbitmq.client.Envelope;
 import com.rabbitmq.tools.jsonrpc.JsonRpcException;
 
 
@@ -199,6 +204,16 @@ public class VLibTourVisitTouristApplication {
 			}
 		});
 		
+		VLibTourGroupCommunicationSystemClient v = new VLibTourGroupCommunicationSystemClient(userId,"1","3");
+		Consumer consumer = new DefaultConsumer(v.getChannel()) {
+			@Override
+			public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
+					byte[] body) throws UnsupportedEncodingException {
+				String message = new String(body, "UTF-8");
+				System.out.println("ReceiveLogsDirect2 Received '" + envelope.getRoutingKey() + "':'" + message + "'");
+			}
+		};
+
 		// start the consumption of messages (e.g. positions of group members) from the group communication system 
 		// TODO
 		// repainting # approximately 3s => delay only non-leader clients => not all
