@@ -56,11 +56,14 @@ public class VLibTourGroupCommunicationSystemClient {
 	    factory.setHost("localhost");
 	    Connection connection = factory.newConnection();
 	    channel = connection.createChannel(); 
-	    EXCHANGE_NAME= groupId + '_' ;
+	    EXCHANGE_NAME= "EXCHANGE" ;
         channel.exchangeDeclare(EXCHANGE_NAME, "topic");
-	    queueName = tourId + "_" + userId;
-	    routingKey = userId+"."+"all"+"."+String.class;
-	    bindingKey ="*.all|"+queueName+".#";
+	    //queueName = tourId + "_" + userId;
+	    routingKey = userId+"."+"all"+"."+"String";
+	    bindingKey = "*.all.String";
+  	    queueName= channel.queueDeclare().getQueue();
+  	    channel.queueBind(queueName, EXCHANGE_NAME, bindingKey);
+
 	    
 	}
 	
@@ -69,7 +72,7 @@ public class VLibTourGroupCommunicationSystemClient {
         channel.basicPublish(EXCHANGE_NAME, routingKey, null, message.getBytes("UTF-8"));
 	}
 
-    public  void addConsumer(Consumer consumer) {
+    public  void addConsumer(Consumer consumer) throws IOException {
     	
     	 // consumer = new DefaultConsumer(channel);
     	  this.consumer=consumer;

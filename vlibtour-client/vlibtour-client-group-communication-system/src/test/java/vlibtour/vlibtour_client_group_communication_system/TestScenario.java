@@ -57,23 +57,23 @@ public class TestScenario {
 		new ProcessBuilder("rabbitmqctl", "stop_app").inheritIO().start().waitFor();
 		new ProcessBuilder("rabbitmqctl", "reset").inheritIO().start().waitFor();
 		new ProcessBuilder("rabbitmqctl", "start_app").inheritIO().start().waitFor();
+		c = new Client ("http://127.0.0.1:15672/api/" , "guest", "guest" );
 
 	}
-
-	@Ignore
+    //@Ignore
 	@Test
 	public void test()
 			throws IOException, TimeoutException, InterruptedException, ExecutionException, InAMQPPartException {
-		VLibTourGroupCommunicationSystemClient v1 = new VLibTourGroupCommunicationSystemClient("1","1","3");
-		VLibTourGroupCommunicationSystemClient v2 = new VLibTourGroupCommunicationSystemClient("2","1","3");
-		VLibTourGroupCommunicationSystemClient v3 = new VLibTourGroupCommunicationSystemClient("3","2","3");
-		v1.publish("hello from v1");
+		VLibTourGroupCommunicationSystemClient v1 = new VLibTourGroupCommunicationSystemClient("user1","group1","tour3");
+		VLibTourGroupCommunicationSystemClient v2 = new VLibTourGroupCommunicationSystemClient("user2","group1","tour3");
+		VLibTourGroupCommunicationSystemClient v3 = new VLibTourGroupCommunicationSystemClient("user3","group2","tour3");
+		
 		Consumer c1 = new DefaultConsumer(v1.getChannel()) {
 			@Override
 			public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
 					byte[] body) throws UnsupportedEncodingException {
 				String message = new String(body, "UTF-8");
-				System.out.println("Received '" + envelope.getRoutingKey() + "':'" + message + "'");
+				System.out.println("user1 Received '" + envelope.getRoutingKey() + "':'" + message + "'");
 				v1.incrementNbMsgReceived();
 			}
 		};
@@ -82,7 +82,7 @@ public class TestScenario {
 			public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
 					byte[] body) throws UnsupportedEncodingException {
 				String message = new String(body, "UTF-8");
-				System.out.println("Received '" + envelope.getRoutingKey() + "':'" + message + "'");
+				System.out.println("user2 Received '" + envelope.getRoutingKey() + "':'" + message + "'");
 				v2.incrementNbMsgReceived();
 			}
 		};
@@ -91,8 +91,8 @@ public class TestScenario {
 			public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
 					byte[] body) throws UnsupportedEncodingException {
 				String message = new String(body, "UTF-8");
-				System.out.println("Received '" + envelope.getRoutingKey() + "':'" + message + "'");
-				v3.getNbMsgReceived();
+				System.out.println("user3 Received '" + envelope.getRoutingKey() + "':'" + message + "'");
+				v3.incrementNbMsgReceived();
 			}
 		};
 		v1.addConsumer(c1);
@@ -103,11 +103,17 @@ public class TestScenario {
 		v2.startConsumption();
 		v3.startConsumption();
 		
+		Thread.sleep(1000);
+		v1.publish("hello from v1");
+		v2.publish("hello from v2");
 		Thread.sleep(5000);
 		
-		 Assert.assertEquals(1, v1.getNbMsgReceived());
-		 Assert.assertEquals(1, v1.getNbMsgReceived());
-		 Assert.assertEquals(0, v2.getNbMsgReceived());
+		System.out.println("user1 has"+ v1.getNbMsgReceived());
+		System.out.println("user2 has"+ v2.getNbMsgReceived());
+		System.out.println("user3 has"+ v3.getNbMsgReceived());
+		 Assert.assertEquals(2, v1.getNbMsgReceived());
+		 Assert.assertEquals(2, v1.getNbMsgReceived());
+		 Assert.assertEquals(2, v2.getNbMsgReceived());
 		 
 		 v1.close();
 		 v2.close();
