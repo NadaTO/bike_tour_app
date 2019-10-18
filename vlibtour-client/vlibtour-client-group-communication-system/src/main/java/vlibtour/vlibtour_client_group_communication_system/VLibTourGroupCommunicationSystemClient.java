@@ -22,6 +22,9 @@ Contributor(s):
 package vlibtour.vlibtour_client_group_communication_system;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.Channel;
@@ -50,13 +53,21 @@ public class VLibTourGroupCommunicationSystemClient {
 	private Connection connection;
 	private int nbMsgReceived = 0;
 	
-	public VLibTourGroupCommunicationSystemClient (String userId , String groupId , String tourId ) throws IOException, TimeoutException {
+	public VLibTourGroupCommunicationSystemClient (String userId , String groupId , String tourId ,String password) throws IOException, TimeoutException, KeyManagementException, NoSuchAlgorithmException, URISyntaxException {
 		
+	    /*
+	     * ConnectionFactory factory = new ConnectionFactory();
+	     * factory.setHost("localhost");
+	     */
+		//using vhosts
 		ConnectionFactory factory = new ConnectionFactory();
-	    factory.setHost("localhost");
-	    Connection connection = factory.newConnection();
+		String url = "amqp://" + userId + ":" + password + "@" + "localhost" + ":" + factory.getPort() + "/" + groupId;   
+		factory.setUri(url);
+		factory.setUsername(userId);
+		factory.setPassword(password);
+		connection = factory.newConnection();
 	    channel = connection.createChannel(); 
-	    EXCHANGE_NAME= "EXCHANGE" ;
+	    EXCHANGE_NAME= tourId ;
         channel.exchangeDeclare(EXCHANGE_NAME, "topic");
 	    //queueName = tourId + "_" + userId;
 	    routingKey = userId+"."+"all"+"."+"String";
@@ -74,7 +85,6 @@ public class VLibTourGroupCommunicationSystemClient {
 
     public  void addConsumer(Consumer consumer) throws IOException {
     	
-    	 // consumer = new DefaultConsumer(channel);
     	  this.consumer=consumer;
     }
     
