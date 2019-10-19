@@ -32,6 +32,8 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
+
+import vlibtour.vlibtour_lobby_room_api.InAMQPPartException;
 /**
  * This class is the client application of the tourists.
  * 
@@ -52,6 +54,14 @@ public class VLibTourGroupCommunicationSystemClient {
 	private Consumer consumer;
 	private Connection connection;
 	private int nbMsgReceived = 0;
+	
+	/**
+	 * creates the lobby room server and the corresponding JSON server object.
+	 * @param userId .
+	 * @param groupId .
+	 * @param tourId .
+	 * @param password .
+	 */
 	
 	public VLibTourGroupCommunicationSystemClient (String userId , String groupId , String tourId ,String password) throws IOException, TimeoutException, KeyManagementException, NoSuchAlgorithmException, URISyntaxException {
 		

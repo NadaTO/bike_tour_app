@@ -21,10 +21,14 @@ Contributor(s):
  */
 package vlibtour.vlibtour_lobby_room_api;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * This interface defines the service of the lobby room. A server implementing
@@ -70,7 +74,6 @@ public interface VLibTourLobbyService {
 	 * @param userId
 	 *            the user identifier.
 	 * @return the URL to the group communication system for that user to this
-	 *         group.
 	 */
 	String createGroupAndJoinIt(String groupId, String userId);
 

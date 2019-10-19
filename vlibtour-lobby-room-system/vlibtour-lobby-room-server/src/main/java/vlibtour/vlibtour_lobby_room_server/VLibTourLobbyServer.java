@@ -21,8 +21,20 @@ Contributor(s):
  */
 package vlibtour.vlibtour_lobby_room_server;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.TimeoutException;
+
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.tools.jsonrpc.JsonRpcServer;
+import vlibtour.vlibtour_client_group_communication_system.VLibTourGroupCommunicationSystemClient;
 import vlibtour.vlibtour_lobby_room_api.InAMQPPartException;
 import vlibtour.vlibtour_lobby_room_api.VLibTourLobbyService;
+
 
 /**
  * This class implements the VLibTour lobby room service. This is the entry
@@ -37,26 +49,66 @@ import vlibtour.vlibtour_lobby_room_api.VLibTourLobbyService;
  * @author Denis Conan
  */
 public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
-
+	/**
+	 * the connection to the RabbitMQ broker.
+	 */
+	private Connection connection;
+	/**
+	 * the channel for consuming and producing.
+	 */
+	private Channel channel;
+	/**
+	 * the RabbitMQ JSON RPC server.
+	 */
+	private JsonRpcServer rpcServer;
+	
 	/**
 	 * creates the lobby room server and the corresponding JSON server object.
 	 * 
-	 * @throws InAMQPPartException the exception thrown in case of a problem in the
-	 *                             AMQP part.
+	 * @throws IOException 
+	 * @throws TimeoutException 
 	 */
-	public VLibTourLobbyServer() throws InAMQPPartException {
-		throw new UnsupportedOperationException("No implemented, yet");
+	public VLibTourLobbyServer() throws  IOException, TimeoutException {
+		ConnectionFactory factory = new ConnectionFactory();
+		factory.setHost("localhost");
+		connection = factory.newConnection();
+		channel = connection.createChannel();
+		channel.exchangeDeclare(EXCHANGE_NAME, "direct");
+		String queueName = channel.queueDeclare().getQueue();
+		channel.queueBind(queueName, EXCHANGE_NAME, BINDING_KEY);
+		rpcServer = new JsonRpcServer(channel, queueName, VLibTourLobbyService.class, this);
 	}
+	
 
 	@Override
-	public String createGroupAndJoinIt(final String groupId, final String userId) {
-		throw new UnsupportedOperationException("No implemented, yet");
+	public String createGroupAndJoinIt(final String tourId, final String userId) {
+		String groupId = tourId + VLibTourLobbyService.GROUP_TOUR_USER_DELIMITER+ userId ;
+		String password = "pass";
+		String url="";
+		
+		try {
+			VLibTourGroupCommunicationSystemClient v;
+			v = new VLibTourGroupCommunicationSystemClient(userId, groupId, tourId, password);
+		} catch (KeyManagementException e) {
+			url = e.toString();	
+		} catch (NoSuchAlgorithmException e) {
+			url = e.toString();
+		} catch (IOException e) {
+			url = e.toString();
+		} catch (TimeoutException e) {
+			url =  e.toString();
+		} catch (URISyntaxException e) {
+			url = e.toString();
+		}
+	    //url= "amqp://" + userId + ":" + password + "@" + "localhost" + ":" + factory.getPort() + "/" + groupId;  
+		return url;
 	}
 
 	@Override
 	public String joinAGroup(final String groupId, final String userId) {
 		throw new UnsupportedOperationException("No implemented, yet");
 	}
+	
 
 	/**
 	 * creates the JSON RPC server and enters into the main loop of the JSON RPC
@@ -66,7 +118,11 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 	 */
 	@Override
 	public void run() {
-		throw new UnsupportedOperationException("No implemented, yet");
+		try {
+			rpcServer.mainloop();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -75,9 +131,20 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 	 * 
 	 * @throws InAMQPPartException the exception thrown in case of a problem in the
 	 *                             AMQP part.
+	 * @throws IOException 
+	 * @throws TimeoutException 
 	 */
-	public void close() throws InAMQPPartException {
-		throw new UnsupportedOperationException("No implemented, yet");
+	public void close() throws IOException, TimeoutException {
+		if (rpcServer != null) {
+			rpcServer.terminateMainloop();
+			rpcServer.close();
+		}
+		if (channel != null) {
+			channel.close();
+		}
+		if (connection != null) {
+			connection.close();
+		}
 	}
 
 	/**
@@ -92,6 +159,7 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 	 *                   apply the strategy "fail fast").
 	 */
 	public static void main(final String[] args) throws Exception {
-		throw new UnsupportedOperationException("No implemented, yet");
+		VLibTourLobbyServer  rpcServer = new VLibTourLobbyServer ();
+		rpcServer.run();
 	}
 }
