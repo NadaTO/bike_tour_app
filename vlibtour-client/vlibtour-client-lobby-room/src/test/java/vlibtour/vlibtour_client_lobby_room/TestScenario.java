@@ -35,6 +35,7 @@ import org.junit.Test;
 import com.rabbitmq.http.client.Client;
 import com.rabbitmq.tools.jsonrpc.JsonRpcException;
 
+import junit.framework.Assert;
 import vlibtour.vlibtour_lobby_room_api.InAMQPPartException;
 
 public class TestScenario {
@@ -56,10 +57,27 @@ public class TestScenario {
 		c = new Client("http://127.0.0.1:15672/api/", "guest", "guest");
 	}
 
+	@SuppressWarnings("deprecation")
 	@Ignore
 	@Test
 	public void test() throws IOException, TimeoutException, InterruptedException, ExecutionException,
-			InAMQPPartException, JsonRpcException {
+			InAMQPPartException, JsonRpcException, URISyntaxException {
+		
+		String userId1 = "1";
+		String userId2 = "2";
+		String tourId = "1";
+		String groupId = tourId+'_'+userId1;
+		String groupId1;
+		
+		VLibTourLobbyRoomClient rpcClient1 = new VLibTourLobbyRoomClient(tourId, userId1);
+		String url1 = rpcClient1.createGroupAndJoinIt(tourId, userId1);
+		VLibTourLobbyRoomClient rpcClient2 = new VLibTourLobbyRoomClient( groupId,tourId, userId2);
+		String url2 = rpcClient2.joinAGroup(groupId,userId2);
+		groupId1 = VLibTourLobbyRoomClient.computeGroupId(url2);
+		Assert.assertTrue((url1!= null)&&!(url1.equals("")));
+		Assert.assertTrue((url2!= null)&&!(url2.equals("")));
+		Assert.assertTrue(groupId1.contentEquals(groupId));
+	
 	}
 
 	@AfterClass

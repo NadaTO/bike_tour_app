@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.Channel;
@@ -50,6 +51,11 @@ import vlibtour.vlibtour_lobby_room_api.VLibTourLobbyService;
  * @author Denis Conan
  */
 public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
+	
+	/**
+	 * the connection factory
+	 */
+	private ConnectionFactory factory;
 	/**
 	 * the connection to the RabbitMQ broker.
 	 */
@@ -84,30 +90,27 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 	@Override
 	public String createGroupAndJoinIt(final String tourId, final String userId) {
 		String groupId = tourId + VLibTourLobbyService.GROUP_TOUR_USER_DELIMITER+ userId ;
-		String password = "pass";
-		String url="";
-		
+		String password = UUID.randomUUID().toString();
+		String url;
+				
 		try {
-			VLibTourGroupCommunicationSystemClient v;
-			v = new VLibTourGroupCommunicationSystemClient(userId, groupId, tourId, password);
-		} catch (KeyManagementException e) {
-			url = e.toString();	
-		} catch (NoSuchAlgorithmException e) {
-			url = e.toString();
-		} catch (IOException e) {
-			url = e.toString();
-		} catch (TimeoutException e) {
-			url =  e.toString();
-		} catch (URISyntaxException e) {
-			url = e.toString();
+			    url= "amqp://" + userId + ":" + password + "@" + "localhost" + ":" + factory.getPort() + "/" + groupId;  
+		} catch( Exception e) {
+			url=e.toString();
 		}
-	    //url= "amqp://" + userId + ":" + password + "@" + "localhost" + ":" + factory.getPort() + "/" + groupId;  
 		return url;
 	}
 
 	@Override
 	public String joinAGroup(final String groupId, final String userId) {
-		throw new UnsupportedOperationException("No implemented, yet");
+		String password =UUID.randomUUID().toString();
+		String url;
+		try {
+			    url= "amqp://" + userId + ":" + password + "@" + "localhost" + ":" + factory.getPort() + "/" + groupId;  
+		} catch( Exception e) {
+			url=e.toString();
+		}
+		return url;
 	}
 	
 

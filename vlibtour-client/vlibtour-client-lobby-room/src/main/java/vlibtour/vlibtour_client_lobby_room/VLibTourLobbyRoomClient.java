@@ -22,6 +22,8 @@ Contributor(s):
 package vlibtour.vlibtour_client_lobby_room;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.Channel;
@@ -50,12 +52,16 @@ public class VLibTourLobbyRoomClient {
 	 */
 	private JsonRpcClient jsonRpcClient;
 	/**
-	 * the Fibonacci service.
+	 * the lobbyroom service.
 	 */
 	private VLibTourLobbyService client;
+	/**
+	 * the group Id
+	 */
+	private int groupId;
 
 	/**
-	 * default constructor of the RPC client.
+	 * default constructor of the RPC client that will create a group.
 	 * 
 	 * @throws IOException
 	 *             the communication problems.
@@ -64,7 +70,45 @@ public class VLibTourLobbyRoomClient {
 	 * @throws JsonRpcException
 	 *             JSON problem in marshaling or un-marshaling.
 	 */
-	public VLibTourLobbyRoomClient() throws IOException, TimeoutException, JsonRpcException {
+	
+	public VLibTourLobbyRoomClient(String tourId, String userId) throws IOException, TimeoutException, JsonRpcException {
+		if (userId==null || userId.equals("")) {
+			throw new IllegalArgumentException("userId cannot be empty");
+		}
+		
+		if (tourId==null || tourId.equals("")){
+			throw new IllegalArgumentException(" tourId cannot be empty");
+		}
+		ConnectionFactory factory = new ConnectionFactory();
+		factory.setHost("localhost");
+		connection = factory.newConnection();
+		channel = connection.createChannel();
+		jsonRpcClient = new JsonRpcClient(channel, client.EXCHANGE_NAME, client.BINDING_KEY);
+		client = (VLibTourLobbyService) jsonRpcClient.createProxy(VLibTourLobbyService.class);
+	}
+
+	/**
+	 * default constructor of the RPC client that will join an existing group.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             the communication problems.
+	 * @throws TimeoutException
+	 *             broker to long to connect to.
+	 * @throws JsonRpcException
+	 *             JSON problem in marshaling or un-marshaling.
+	 */
+	public VLibTourLobbyRoomClient(String groupId, String tourId, String userId) throws IOException, TimeoutException, JsonRpcException {
+		if (userId==null || userId.equals("")) {
+			throw new IllegalArgumentException("userId cannot be empty");
+		}
+		
+		if (tourId==null || tourId.equals("")){
+			throw new IllegalArgumentException(" tourId cannot be empty");
+		}
+		
+		if (groupId==null || groupId.equals("")){
+			throw new IllegalArgumentException(" groupId cannot be empty");
+		}
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost("localhost");
 		connection = factory.newConnection();
@@ -98,10 +142,16 @@ public class VLibTourLobbyRoomClient {
 	 *            the id of the creator.
 	 * @return the url to connect to communication system
 	 */
-	public String join(final String groupId, final String userId ) {
+	public String joinAGroup(final String groupId, final String userId ) {
 		System.out.println(" [x] Requesting join (" + groupId + userId+ ")");
 		String result = client.joinAGroup(groupId, userId);
 		System.out.println(" [.] Got '" + result + "'");
+		return result;
+	}
+	
+	
+	static String computeGroupId(String url) throws UnsupportedEncodingException, URISyntaxException {
+		String result = VLibTourLobbyService.computeGroupId(url);
 		return result;
 	}
 	/**
@@ -131,8 +181,17 @@ public class VLibTourLobbyRoomClient {
 	 *             communication problem with the broker.
 	 */
 	public static void main(final String[] argv) throws Exception {
-		VLibTourLobbyRoomClient rpcClient = new VLibTourLobbyRoomClient();
-		rpcClient.createGroupAndJoinIt(argv[0], argv[1]);
+		
+		String userId = argv [0];
+		String tourId = argv[1];
+		String groupId = tourId+'_'+userId;
+		VLibTourLobbyRoomClient rpcClient = new VLibTourLobbyRoomClient(tourId, userId);
+		String url=rpcClient.createGroupAndJoinIt(argv[0], argv[1]);
+		System.out.println("L'url vers le group créé est :"+ url);
+		VLibTourLobbyRoomClient rpcClient1 = new VLibTourLobbyRoomClient(groupId,tourId, userId);
+		String url1 =rpcClient.joinAGroup(argv[0], argv[1]);
+		System.out.println("L'url vers votre groupe est :"+ url1);
 		rpcClient.close();
+		rpcClient1.close();
 	}
 }

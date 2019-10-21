@@ -69,17 +69,13 @@ public class VLibTourGroupCommunicationSystemClient {
 	     * ConnectionFactory factory = new ConnectionFactory();
 	     * factory.setHost("localhost");
 	     */
-		//using vhosts
 		ConnectionFactory factory = new ConnectionFactory();
 		String url = "amqp://" + userId + ":" + password + "@" + "localhost" + ":" + factory.getPort() + "/" + groupId;   
 		factory.setUri(url);
-		factory.setUsername(userId);
-		factory.setPassword(password);
 		connection = factory.newConnection();
 	    channel = connection.createChannel(); 
 	    EXCHANGE_NAME= tourId ;
         channel.exchangeDeclare(EXCHANGE_NAME, "topic");
-	    //queueName = tourId + "_" + userId;
 	    routingKey = userId+"."+"all"+"."+"String";
 	    bindingKey = "*.all.String";
   	    queueName= channel.queueDeclare().getQueue();
