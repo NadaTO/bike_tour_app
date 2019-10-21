@@ -36,6 +36,7 @@ import vlibtour.vlibtour_lobby_room_api.InAMQPPartException;
 import vlibtour.vlibtour_lobby_room_api.VLibTourLobbyService;
 
 
+
 /**
  * This class implements the VLibTour lobby room service. This is the entry
  * point of the system for the clients when they want to start a tour.

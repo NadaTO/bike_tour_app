@@ -204,15 +204,15 @@ public class VLibTourVisitTouristApplication {
 			}
 		});
 		
-		VLibTourGroupCommunicationSystemClient v = new VLibTourGroupCommunicationSystemClient(userId,"1","3");
-		Consumer consumer = new DefaultConsumer(v.getChannel()) {
+		//VLibTourGroupCommunicationSystemClient v = new VLibTourGroupCommunicationSystemClient(userId,"1","3");
+	/*	Consumer consumer = new DefaultConsumer(v.getChannel()) {
 			@Override
 			public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
 					byte[] body) throws UnsupportedEncodingException {
 				String message = new String(body, "UTF-8");
 				System.out.println("ReceiveLogsDirect2 Received '" + envelope.getRoutingKey() + "':'" + message + "'");
 			}
-		};
+		};*/
 
 		// start the consumption of messages (e.g. positions of group members) from the group communication system 
 		// TODO
