@@ -22,9 +22,6 @@ Contributor(s):
 package vlibtour.vlibtour_lobby_room_server;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
@@ -32,7 +29,6 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.tools.jsonrpc.JsonRpcServer;
-import vlibtour.vlibtour_client_group_communication_system.VLibTourGroupCommunicationSystemClient;
 import vlibtour.vlibtour_lobby_room_api.InAMQPPartException;
 import vlibtour.vlibtour_lobby_room_api.VLibTourLobbyService;
 
@@ -78,6 +74,7 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 	public VLibTourLobbyServer() throws  IOException, TimeoutException {
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost("localhost");
+		//factory.setPort(15672);
 		connection = factory.newConnection();
 		channel = connection.createChannel();
 		channel.exchangeDeclare(EXCHANGE_NAME, "direct");
@@ -92,7 +89,8 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 		String groupId = tourId + VLibTourLobbyService.GROUP_TOUR_USER_DELIMITER+ userId ;
 		String password = UUID.randomUUID().toString();
 		String url;
-				
+				System.out.println("pass"+password);
+				//System.out.println("pass"+factory.getPort());
 		try {
 			    url= "amqp://" + userId + ":" + password + "@" + "localhost" + ":" + factory.getPort() + "/" + groupId;  
 		} catch( Exception e) {

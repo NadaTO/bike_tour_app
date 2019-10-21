@@ -76,8 +76,8 @@ public class VLibTourGroupCommunicationSystemClient {
 	    channel = connection.createChannel(); 
 	    EXCHANGE_NAME= tourId ;
         channel.exchangeDeclare(EXCHANGE_NAME, "topic");
-	    routingKey = userId+"."+"all"+"."+"String";
-	    bindingKey = "*.all.String";
+	    routingKey = userId+"."+"all.#";
+	    bindingKey = "*.all.#";
   	    queueName= channel.queueDeclare().getQueue();
   	    channel.queueBind(queueName, EXCHANGE_NAME, bindingKey);
 

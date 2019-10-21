@@ -83,7 +83,7 @@ public class VLibTourLobbyRoomClient {
 		factory.setHost("localhost");
 		connection = factory.newConnection();
 		channel = connection.createChannel();
-		jsonRpcClient = new JsonRpcClient(channel, client.EXCHANGE_NAME, client.BINDING_KEY);
+		jsonRpcClient = new JsonRpcClient(channel, "vlib-tour-lobby", "lobby");
 		client = (VLibTourLobbyService) jsonRpcClient.createProxy(VLibTourLobbyService.class);
 	}
 
@@ -113,7 +113,7 @@ public class VLibTourLobbyRoomClient {
 		factory.setHost("localhost");
 		connection = factory.newConnection();
 		channel = connection.createChannel();
-		jsonRpcClient = new JsonRpcClient(channel, client.EXCHANGE_NAME, client.BINDING_KEY);
+		jsonRpcClient = new JsonRpcClient(channel, "vlib-tour-lobby", "lobby");
 		client = (VLibTourLobbyService) jsonRpcClient.createProxy(VLibTourLobbyService.class);
 	}
 
