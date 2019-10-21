@@ -38,10 +38,5 @@ Contributor(s):
       <artifactId>vlibtour-lobby-room-api</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
-     <dependency>
-      <groupId>eu.telecomsudparis.vlibtour.vlibtour-client</groupId>
-      <artifactId>vlibtour-client-group-communication-system</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
   </dependencies>
 </project>
