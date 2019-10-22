@@ -70,9 +70,11 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 	 * 
 	 * @throws IOException 
 	 * @throws TimeoutException 
+	 * @throws InterruptedException 
 	 */
-	public VLibTourLobbyServer() throws  IOException, TimeoutException {
-		ConnectionFactory factory = new ConnectionFactory();
+	public VLibTourLobbyServer() throws  IOException, TimeoutException, InterruptedException {
+		
+		factory = new ConnectionFactory();
 		factory.setHost("localhost");
 		//factory.setPort(15672);
 		connection = factory.newConnection();
@@ -89,13 +91,12 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 		String groupId = tourId + VLibTourLobbyService.GROUP_TOUR_USER_DELIMITER+ userId ;
 		String password = UUID.randomUUID().toString();
 		String url;
-				System.out.println("pass"+password);
-				//System.out.println("pass"+factory.getPort());
 		try {
-			    url= "amqp://" + userId + ":" + password + "@" + "localhost" + ":" + factory.getPort() + "/" + groupId;  
-		} catch( Exception e) {
+		 url= "amqp://" + userId + ":" + password + "@" + "localhost" + ":" + factory.getPort() + "/" + groupId; 
+		} catch ( Exception e) {
 			url=e.toString();
-		}
+		} 
+			  		
 		return url;
 	}
 
@@ -104,10 +105,12 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 		String password =UUID.randomUUID().toString();
 		String url;
 		try {
-			    url= "amqp://" + userId + ":" + password + "@" + "localhost" + ":" + factory.getPort() + "/" + groupId;  
-		} catch( Exception e) {
-			url=e.toString();
-		}
+			 url= "amqp://" + userId + ":" + password + "@" + "localhost" + ":" + factory.getPort() + "/" + groupId; 
+		} catch ( Exception e) {
+				url=e.toString();
+			}
+		
+		
 		return url;
 	}
 	

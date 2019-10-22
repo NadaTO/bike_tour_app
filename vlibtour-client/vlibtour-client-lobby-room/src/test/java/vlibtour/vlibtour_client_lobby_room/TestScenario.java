@@ -80,12 +80,13 @@ public class TestScenario {
 		VLibTourLobbyRoomClient rpcClient2 = new VLibTourLobbyRoomClient( groupId,tourId, userId2);
 		String url2 = rpcClient2.joinAGroup(groupId,userId2);
 		groupId1 = VLibTourLobbyRoomClient.computeGroupId(url2);
-		//Assert.assertNotNull(url1);
+		Assert.assertNotNull(url1);
+		Assert.assertNotNull(url2);
 		Assert.assertTrue((url1!= null)&&!(url1.equals("")));
-	//	System.out.println("url1"+url1);
+	System.out.println("url1"+url1);
 		Assert.assertTrue((url2!= null)&&!(url2.equals("")));
-		//System.out.println("url2"+url2);
-		//Assert.assertTrue(groupId1.contentEquals(groupId));
+		System.out.println("url2"+url2);
+		Assert.assertTrue(groupId1.contentEquals(groupId));
 	
 	}
 
