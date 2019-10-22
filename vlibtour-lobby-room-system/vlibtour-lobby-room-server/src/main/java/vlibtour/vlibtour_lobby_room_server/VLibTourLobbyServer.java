@@ -76,7 +76,6 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 		
 		factory = new ConnectionFactory();
 		factory.setHost("localhost");
-		//factory.setPort(15672);
 		connection = factory.newConnection();
 		channel = connection.createChannel();
 		channel.exchangeDeclare(EXCHANGE_NAME, "direct");

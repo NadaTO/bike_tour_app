@@ -34,6 +34,7 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 
 import vlibtour.vlibtour_lobby_room_api.InAMQPPartException;
+import vlibtour.vlibtour_lobby_room_api.VLibTourLobbyService;
 /**
  * This class is the client application of the tourists.
  * 
@@ -43,7 +44,7 @@ public class VLibTourGroupCommunicationSystemClient {
 	/**
 	 * the name of the exchange
 	 */
-	private static String EXCHANGE_NAME= null; 
+	public  String EXCHANGE_NAME= null; 
 	/**
 	 * the name of the queue
 	 */
@@ -63,15 +64,14 @@ public class VLibTourGroupCommunicationSystemClient {
 	 * @param password .
 	 */
 	
-	public VLibTourGroupCommunicationSystemClient (String userId , String groupId , String tourId ,String password) throws IOException, TimeoutException, KeyManagementException, NoSuchAlgorithmException, URISyntaxException {
-		
-	    /*
-	     * ConnectionFactory factory = new ConnectionFactory();
-	     * factory.setHost("localhost");
-	     */
+	public VLibTourGroupCommunicationSystemClient (String url) throws IOException, TimeoutException, KeyManagementException, NoSuchAlgorithmException, URISyntaxException {
+
 		ConnectionFactory factory = new ConnectionFactory();
-		String url = "amqp://" + userId + ":" + password + "@" + "localhost" + ":" + factory.getPort() + "/" + groupId;   
 		factory.setUri(url);
+		String userId = factory.getUsername();
+		String groupId = VLibTourLobbyService .computeGroupId(url);		
+		String tourId = groupId.split("_")[0];
+	
 		connection = factory.newConnection();
 	    channel = connection.createChannel(); 
 	    EXCHANGE_NAME= tourId ;

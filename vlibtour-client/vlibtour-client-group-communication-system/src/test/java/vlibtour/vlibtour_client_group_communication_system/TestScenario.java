@@ -59,23 +59,23 @@ public class TestScenario {
 		new ProcessBuilder("rabbitmqctl", "stop_app").inheritIO().start().waitFor();
 		new ProcessBuilder("rabbitmqctl", "reset").inheritIO().start().waitFor();
 		new ProcessBuilder("rabbitmqctl", "start_app").inheritIO().start().waitFor();
-		new ProcessBuilder("rabbitmqctl", "add_vhost" ,"group1").inheritIO().start().waitFor();
-		new ProcessBuilder("rabbitmqctl", "add_vhost" ,"group2").inheritIO().start().waitFor();
+		new ProcessBuilder("rabbitmqctl", "add_vhost" ,"tour1_user1").inheritIO().start().waitFor();
+		new ProcessBuilder("rabbitmqctl", "add_vhost" ,"tour3_user3").inheritIO().start().waitFor();
 		new ProcessBuilder("rabbitmqctl", "add_user" ,"user1", "password").inheritIO().start().waitFor();
 		new ProcessBuilder("rabbitmqctl", "add_user" ,"user2", "password").inheritIO().start().waitFor();
 		new ProcessBuilder("rabbitmqctl", "add_user" ,"user3", "password").inheritIO().start().waitFor();
-		new ProcessBuilder("rabbitmqctl", "set_permissions" ,"-p","group1", "user1", ".*", ".*", ".*").inheritIO().start().waitFor();
-		new ProcessBuilder("rabbitmqctl", "set_permissions" ,"-p","group1","user2", ".*", ".*", ".*").inheritIO().start().waitFor();
-		new ProcessBuilder("rabbitmqctl", "set_permissions" ,"-p","group2","user3", ".*", ".*", ".*").inheritIO().start().waitFor();
+		new ProcessBuilder("rabbitmqctl", "set_permissions" ,"-p","tour1_user1", "user1", ".*", ".*", ".*").inheritIO().start().waitFor();
+		new ProcessBuilder("rabbitmqctl", "set_permissions" ,"-p","tour1_user1","user2", ".*", ".*", ".*").inheritIO().start().waitFor();
+		new ProcessBuilder("rabbitmqctl", "set_permissions" ,"-p","tour3_user3","user3", ".*", ".*", ".*").inheritIO().start().waitFor();
 
 		c = new Client ("http://127.0.0.1:15672/api/" , "guest", "guest" );
 	}
 	@Test
-	public void test()
-			throws IOException, TimeoutException, InterruptedException, ExecutionException, InAMQPPartException, KeyManagementException, NoSuchAlgorithmException, URISyntaxException {
-		VLibTourGroupCommunicationSystemClient v1 = new VLibTourGroupCommunicationSystemClient("user1","group1","tour3", "password");
-		VLibTourGroupCommunicationSystemClient v2 = new VLibTourGroupCommunicationSystemClient("user2","group1","tour3", "password");
-		VLibTourGroupCommunicationSystemClient v3 = new VLibTourGroupCommunicationSystemClient("user3","group2","tour3", "password");
+	public void test() throws IOException, TimeoutException, InterruptedException, ExecutionException, InAMQPPartException, KeyManagementException, NoSuchAlgorithmException, URISyntaxException {
+
+		VLibTourGroupCommunicationSystemClient v1 = new VLibTourGroupCommunicationSystemClient("amqp://user1:password@localhost:5672/tour1_user1");
+		VLibTourGroupCommunicationSystemClient v2 = new VLibTourGroupCommunicationSystemClient("amqp://user2:password@localhost:5672/tour1_user1");
+		VLibTourGroupCommunicationSystemClient v3 = new VLibTourGroupCommunicationSystemClient("amqp://user3:password@localhost:5672/tour3_user3");
 		
 		Consumer c1 = new DefaultConsumer(v1.getChannel()) {
 			@Override
@@ -120,6 +120,8 @@ public class TestScenario {
 		System.out.println("user1 has"+ v1.getNbMsgReceived());
 		System.out.println("user2 has"+ v2.getNbMsgReceived());
 		System.out.println("user3 has"+ v3.getNbMsgReceived());
+		System.out.println("v1.exchange_name="+ v1.EXCHANGE_NAME);
+		System.out.println("v2.exchange_name="+ v2.EXCHANGE_NAME);
 		 Assert.assertEquals(2, v1.getNbMsgReceived());
 		 Assert.assertEquals(2, v2.getNbMsgReceived());
 		 Assert.assertEquals(0, v3.getNbMsgReceived());
