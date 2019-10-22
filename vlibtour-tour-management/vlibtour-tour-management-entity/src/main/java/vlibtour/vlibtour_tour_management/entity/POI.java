@@ -75,11 +75,9 @@ public class POI implements Serializable {
 	 */
 	private double longitude;
 	/**
-	 * gets the name.
-	 * 
-	 * @return the name.
+	 * POI constructor.
 	 */
-public POI() {
+    public POI() {
 		
 	}
 	

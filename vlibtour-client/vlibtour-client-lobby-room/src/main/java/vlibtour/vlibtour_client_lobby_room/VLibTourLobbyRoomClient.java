@@ -126,9 +126,9 @@ public class VLibTourLobbyRoomClient {
 	 *            the id of the creator.
 	 * @return the url to connect to communication system
 	 */
-	public String createGroupAndJoinIt(final String groupId, final String userId ) {
-		System.out.println(" [x] Requesting createGroupAndJoinIt (" + groupId + userId+ ")");
-		String result = client.createGroupAndJoinIt(groupId, userId);
+	public String createGroupAndJoinIt(final String tourId, final String userId ) {
+		System.out.println(" [x] Requesting createGroupAndJoinIt (" + tourId + userId+ ")");
+		String result = client.createGroupAndJoinIt(tourId, userId);
 		System.out.println(" [.] Got '" + result + "'");
 		return result;
 	}

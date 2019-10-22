@@ -85,7 +85,8 @@ public class Tour implements Serializable {
 	}
 	/**
 	 * sets the name
-     * @param name
+     * @param name name of the tour.
+     * 
 	 */
 	public void setName(String name) {
 		this.name = name;
