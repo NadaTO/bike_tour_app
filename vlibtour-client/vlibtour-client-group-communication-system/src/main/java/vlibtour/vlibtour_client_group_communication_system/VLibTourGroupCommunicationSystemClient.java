@@ -58,10 +58,8 @@ public class VLibTourGroupCommunicationSystemClient {
 	
 	/**
 	 * creates the lobby room server and the corresponding JSON server object.
-	 * @param userId .
-	 * @param groupId .
-	 * @param tourId .
-	 * @param password .
+	 * @param url
+	 * 				the url for the access to the group
 	 */
 	
 	public VLibTourGroupCommunicationSystemClient (String url) throws IOException, TimeoutException, KeyManagementException, NoSuchAlgorithmException, URISyntaxException {

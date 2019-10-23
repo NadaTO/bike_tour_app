@@ -60,7 +60,7 @@ public class TestScenario {
 	}
 
 	@SuppressWarnings("deprecation")
-	//@Ignore
+	@Ignore
 	@Test
 	public void test() throws IOException, TimeoutException, InterruptedException, ExecutionException,
 			InAMQPPartException, JsonRpcException, URISyntaxException {

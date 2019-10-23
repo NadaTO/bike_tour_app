@@ -63,6 +63,10 @@ public class VLibTourLobbyRoomClient {
 	/**
 	 * default constructor of the RPC client that will create a group.
 	 * 
+	 * @param  tourId
+	 *                 the id of the tour
+	 * @param  userId
+	 * 					the id of the user           
 	 * @throws IOException
 	 *             the communication problems.
 	 * @throws TimeoutException
@@ -90,7 +94,13 @@ public class VLibTourLobbyRoomClient {
 	/**
 	 * default constructor of the RPC client that will join an existing group.
 	 * 
-	 * @throws IllegalArgumentException
+	 * @param  groupId
+	 *                 the id of the group
+	 * @param  tourId
+	 *                 the id of the tour
+	 * @param  userId
+	 * 					the id of the user    
+	 * @throws IOException
 	 *             the communication problems.
 	 * @throws TimeoutException
 	 *             broker to long to connect to.
@@ -120,7 +130,7 @@ public class VLibTourLobbyRoomClient {
 	/**
 	 * calls the create group service.
 	 * 
-	 * @param groupId
+	 * @param tourId
 	 *            the id of the group to create.
 	 * @param userId
 	 *            the id of the creator.

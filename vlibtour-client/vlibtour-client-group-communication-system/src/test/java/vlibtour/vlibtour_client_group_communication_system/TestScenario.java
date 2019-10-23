@@ -70,6 +70,7 @@ public class TestScenario {
 
 		c = new Client ("http://127.0.0.1:15672/api/" , "guest", "guest" );
 	}
+	//@Ignore
 	@Test
 	public void test() throws IOException, TimeoutException, InterruptedException, ExecutionException, InAMQPPartException, KeyManagementException, NoSuchAlgorithmException, URISyntaxException {
 

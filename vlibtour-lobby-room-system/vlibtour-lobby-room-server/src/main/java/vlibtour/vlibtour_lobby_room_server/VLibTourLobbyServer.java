@@ -70,9 +70,8 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 	 * 
 	 * @throws IOException 
 	 * @throws TimeoutException 
-	 * @throws InterruptedException 
 	 */
-	public VLibTourLobbyServer() throws  IOException, TimeoutException, InterruptedException {
+	public VLibTourLobbyServer() throws  IOException, TimeoutException {
 		
 		factory = new ConnectionFactory();
 		factory.setHost("localhost");
@@ -94,8 +93,7 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 		 url= "amqp://" + userId + ":" + password + "@" + "localhost" + ":" + factory.getPort() + "/" + groupId; 
 		} catch ( Exception e) {
 			url=e.toString();
-		} 
-			  		
+		} 		  		
 		return url;
 	}
 
@@ -108,8 +106,7 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 		} catch ( Exception e) {
 				url=e.toString();
 			}
-		
-		
+			
 		return url;
 	}
 	
@@ -163,7 +160,7 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 	 *                   apply the strategy "fail fast").
 	 */
 	public static void main(final String[] args) throws Exception {
-		VLibTourLobbyServer  rpcServer = new VLibTourLobbyServer ();
-		rpcServer.run();
+		//VLibTourLobbyServer  rpcServer = new VLibTourLobbyServer ();
+		//rpcServer.run();
 	}
 }

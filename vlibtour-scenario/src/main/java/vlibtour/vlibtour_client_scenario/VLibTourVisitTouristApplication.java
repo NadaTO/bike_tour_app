@@ -141,7 +141,6 @@ public class VLibTourVisitTouristApplication {
 	public VLibTourVisitTouristApplication(final String tourId, final Optional<String> groupId, final String userId)
 			throws InAMQPPartException, VlibTourTourManagementException, IOException, JsonRpcException,
 			TimeoutException, InterruptedException, NamingException {
-		//throw new UnsupportedOperationException("No implemented, yet");	
 	    emulationVisitClient = new VLibTourVisitEmulationClient();
 	}
 
@@ -153,27 +152,28 @@ public class VLibTourVisitTouristApplication {
 	 * @throws Exception all the potential problems (since this is a demonstrator,
 	 *                   apply the strategy "fail fast").
 	 */
-	public void main(final String[] args) throws Exception {
+	public static void main(final String[] args) throws Exception {
 		@SuppressWarnings("unused")
 		String usage = "USAGE: " + VLibTourVisitTouristApplication.class.getCanonicalName()
-				+ " userId (either Joe or Avrel)";
+				+ " userId (either Joe or Avrel)   tourId  <optional> groupId"  ;
 		if ((args.length != 2)&&(args.length != 3)) {
 			throw new IllegalArgumentException(usage);
 		}
 		String userId = args[0];
 		String tourId = args[1];
 		String url="";
+		final VLibTourVisitTouristApplication client = new VLibTourVisitTouristApplication("The unusual Paris",Optional.empty(),userId) ;
 		if (args.length == 3) {
 			String groupId = args[2];
-			lobbyRoomClient = new VLibTourLobbyRoomClient(tourId, userId, groupId);
-			url =  lobbyRoomClient.joinAGroup(tourId, userId);
+			client.lobbyRoomClient = new VLibTourLobbyRoomClient(tourId, userId, groupId);
+			url =  client.lobbyRoomClient.joinAGroup(tourId, userId);
 		}
 		else if (args.length == 2) {	
-			lobbyRoomClient = new VLibTourLobbyRoomClient(tourId, userId);
-			url =  lobbyRoomClient.createGroupAndJoinIt(tourId, userId);
+			client.lobbyRoomClient = new VLibTourLobbyRoomClient(tourId, userId);
+			url =  client.lobbyRoomClient.createGroupAndJoinIt(tourId, userId);
 		}
 		
-		final VLibTourVisitTouristApplication client = new VLibTourVisitTouristApplication("The unusual Paris",Optional.empty(),userId) ;
+		
 		if (LOG_ON && EMULATION.isInfoEnabled()) {
 			EMULATION.info(userId + "'s application is starting");
 		}
@@ -204,13 +204,13 @@ public class VLibTourVisitTouristApplication {
 			}
 		});
 		
-		VLibTourGroupCommunicationSystemClient v = new VLibTourGroupCommunicationSystemClient(url);
+		client.groupCommClient = new VLibTourGroupCommunicationSystemClient(url);
 		Gson gson = new Gson();
 		Position oldPosition = emulationVisitClient.getCurrentPosition(userId);
 		MapMarkerDot dot =MapHelper.addTouristOnMap(client.map.get(), Color.ORANGE, font,userId,oldPosition);
 		
 		// start the consumption of messages (e.g. positions of group members) from the group communication system 
-		Consumer consumer = new DefaultConsumer(v.getChannel()) {
+		Consumer consumer = new DefaultConsumer(client.groupCommClient .getChannel()) {
 			@Override
 			public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
 					byte[] body) throws UnsupportedEncodingException {
@@ -221,8 +221,8 @@ public class VLibTourVisitTouristApplication {
 				System.out.println("ReceiveLogsDirect2 Received '" + envelope.getRoutingKey() + "':'" + message + "'");
 			}
 		};
-		v.addConsumer(consumer);
-		v.startConsumption();
+		client.groupCommClient .addConsumer(consumer);
+		client.groupCommClient .startConsumption();
 		
 		emulationVisitClient.stepsInVisit(userId);
 		while (true) {
@@ -231,7 +231,7 @@ public class VLibTourVisitTouristApplication {
 		Position position = emulationVisitClient.stepInCurrentPath(userId);
 		String json = gson.toJson(position); 
 		MapHelper.moveTouristOnMap(dot, position);
-		v.publish(json);
+		client.groupCommClient.publish(json);
 		client.map.get().repaint();
 		Thread.sleep(5000);
 		if (oldPosition.getName().equals(position.getName()))	{
