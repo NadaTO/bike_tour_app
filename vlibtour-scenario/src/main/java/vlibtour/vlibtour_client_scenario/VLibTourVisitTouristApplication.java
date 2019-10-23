@@ -28,6 +28,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 
@@ -35,7 +37,6 @@ import java.util.concurrent.TimeoutException;
 import javax.naming.NamingException;
 
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
-import com.google.gson.Gson;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
@@ -50,6 +51,7 @@ import vlibtour.vlibtour_client_scenario.map_viewer.BasicMap;
 import vlibtour.vlibtour_client_scenario.map_viewer.MapHelper;
 import vlibtour.vlibtour_lobby_room_api.InAMQPPartException;
 import vlibtour.vlibtour_tour_management.entity.VlibTourTourManagementException;
+import vlibtour.vlibtour_visit_emulation.GPSPosition;
 import vlibtour.vlibtour_visit_emulation.Position;
 
 /**
@@ -81,18 +83,20 @@ public class VLibTourVisitTouristApplication {
 	 * the map to manipulate. Not all the clients need to have a map; therefore we
 	 * use an optional.
 	 */
-	@SuppressWarnings("unused")
 	private Optional<BasicMap> map = Optional.empty();
 	/**
 	 * the dot on the map for the first tourist.
 	 */
 	@SuppressWarnings("unused")
-	private static MapMarkerDot mapDotJoe;
+	private MapMarkerDot dot1;
 	/**
 	 * the dot on the map for the second tourist.
 	 */
-	@SuppressWarnings("unused")
-	private static MapMarkerDot mapDotAvrel;
+	private MapMarkerDot dot;
+	/**
+	 * the list of the users in the same tour.
+	 */
+	private  Map <String,MapMarkerDot> users ;
 	/**
 	 * delegation to the client of type
 	 * {@link vlibtour.vlibtour_client_emulation_visit.VLibTourVisitEmulationClient}.
@@ -142,6 +146,7 @@ public class VLibTourVisitTouristApplication {
 			throws InAMQPPartException, VlibTourTourManagementException, IOException, JsonRpcException,
 			TimeoutException, InterruptedException, NamingException {
 	    emulationVisitClient = new VLibTourVisitEmulationClient();
+	    users = new HashMap <String,MapMarkerDot>() ;
 	}
 
 	/**
@@ -153,7 +158,6 @@ public class VLibTourVisitTouristApplication {
 	 *                   apply the strategy "fail fast").
 	 */
 	public static void main(final String[] args) throws Exception {
-		@SuppressWarnings("unused")
 		String usage = "USAGE: " + VLibTourVisitTouristApplication.class.getCanonicalName()
 				+ " userId (either Joe or Avrel)   tourId  <optional> groupId"  ;
 		if ((args.length != 2)&&(args.length != 3)) {
@@ -165,14 +169,14 @@ public class VLibTourVisitTouristApplication {
 		final VLibTourVisitTouristApplication client = new VLibTourVisitTouristApplication("The unusual Paris",Optional.empty(),userId) ;
 		if (args.length == 3) {
 			String groupId = args[2];
-			client.lobbyRoomClient = new VLibTourLobbyRoomClient(tourId, userId, groupId);
-			url =  client.lobbyRoomClient.joinAGroup(tourId, userId);
+			client.lobbyRoomClient = new VLibTourLobbyRoomClient(groupId, tourId, userId);
+			url =  client.lobbyRoomClient.joinAGroup(groupId, userId);
 		}
 		else if (args.length == 2) {	
 			client.lobbyRoomClient = new VLibTourLobbyRoomClient(tourId, userId);
 			url =  client.lobbyRoomClient.createGroupAndJoinIt(tourId, userId);
 		}
-		
+		client.groupCommClient = new VLibTourGroupCommunicationSystemClient(url);
 		
 		if (LOG_ON && EMULATION.isInfoEnabled()) {
 			EMULATION.info(userId + "'s application is starting");
@@ -188,13 +192,16 @@ public class VLibTourVisitTouristApplication {
 		}*/
 	
 		client.map = Optional.of(MapHelper.createMapWithCenterAndZoomLevel(48.851412, 2.343166, 14));
-
+	
 
 		Font font = new Font("name", Font.BOLD, 20);
 		client.map.ifPresent(m -> {
 			MapHelper.addMarkerDotOnMap(m, 48.871799, 2.342355, Color.BLACK, font, "Musée Grevin");
 			MapHelper.addMarkerDotOnMap(m, 48.860959, 2.335757, Color.BLACK, font, "Pyramide du Louvres");
 			MapHelper.addMarkerDotOnMap(m, 48.833566, 2.332416, Color.BLACK, font, "Les catacombes");
+			Position oldPosition = emulationVisitClient.getCurrentPosition(userId);
+			client.dot = MapHelper.addTouristOnMap(client.map.get(), Color.ORANGE, font,userId,oldPosition);
+			client.users.put(userId, client.dot);
 			client.map.get().repaint();
 	
 			try {
@@ -203,54 +210,63 @@ public class VLibTourVisitTouristApplication {
 				e.printStackTrace();
 			}
 		});
-		
-		client.groupCommClient = new VLibTourGroupCommunicationSystemClient(url);
-		Gson gson = new Gson();
-		Position oldPosition = emulationVisitClient.getCurrentPosition(userId);
-		MapMarkerDot dot =MapHelper.addTouristOnMap(client.map.get(), Color.ORANGE, font,userId,oldPosition);
+
 		
 		// start the consumption of messages (e.g. positions of group members) from the group communication system 
+		
 		Consumer consumer = new DefaultConsumer(client.groupCommClient .getChannel()) {
 			@Override
 			public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
 					byte[] body) throws UnsupportedEncodingException {
+				
 				String message = new String(body, "UTF-8");
-				Position position = gson.fromJson(message, Position.class);
-				MapHelper.moveTouristOnMap(dot, position);
+				String longitude , latitude;
+				longitude = message.split(" ")[0].split("=")[1];
+				latitude = message.split(" ")[2].split("=")[1];
+				GPSPosition gps = new GPSPosition (Double.parseDouble(latitude), Double.parseDouble(longitude));
+				Position position = new Position ("position", gps, "");
+				String otherUserId = envelope.getRoutingKey().split("\\.")[0];
+				if (!client.users.containsKey(otherUserId)) {
+					MapMarkerDot  dotOther = MapHelper.addTouristOnMap(client.map.get(), Color.BLUE, font,otherUserId, position);
+					client.users.put(otherUserId, dotOther);
+				}
+				else {
+					MapHelper.moveTouristOnMap(client.users.get(otherUserId),position);
+				}
 				client.map.get().repaint();
-				System.out.println("ReceiveLogsDirect2 Received '" + envelope.getRoutingKey() + "':'" + message + "'");
+				System.out.println("ReceiveLogsDirect2 Received '" + envelope.getRoutingKey() + "':'" + "otherUserId=" + otherUserId);
 			}
 		};
+		
 		client.groupCommClient .addConsumer(consumer);
 		client.groupCommClient .startConsumption();
 		
-		emulationVisitClient.stepsInVisit(userId);
+		
 		while (true) {
-			// step in the current path			
-		oldPosition = emulationVisitClient.getCurrentPosition(userId);
-		Position position = emulationVisitClient.stepInCurrentPath(userId);
-		String json = gson.toJson(position); 
-		MapHelper.moveTouristOnMap(dot, position);
-		client.groupCommClient.publish(json);
-		client.map.get().repaint();
-		Thread.sleep(5000);
-		if (oldPosition.getName().equals(position.getName()))	{
-		position = emulationVisitClient.stepsInVisit(userId);
-		}
+
+			Position nextStep = emulationVisitClient.stepsInVisit(userId);
+			Position position = emulationVisitClient.stepInCurrentPath(userId);
+			String json = position.getGpsPosition().toString();
+			MapHelper.moveTouristOnMap(client.dot, position);
+			client.groupCommClient.publish(json);
+			client.map.get().repaint();
+			Thread.sleep(1000);
 		
-		if (position.getName().equals(emulationVisitClient.stepsInVisit(userId).getName())) {
-			if (LOG_ON && EMULATION.isInfoEnabled()) {
-				EMULATION.info(userId + "has ended the trip");
-			}
-		System.exit(0);	
-		
-		}						
+			if (position.getName().equals(nextStep.getName())) {
+				if (LOG_ON && EMULATION.isInfoEnabled()) {
+					EMULATION.info(userId + "has ended the trip");
+				}
+				break;
+		   }		
 		}
 		
 		// closes the channel and the connection.
 		// TODO
 		// exit this main
 		// e.g. System.exit...
+		//System.exit(0);
+		System.exit(0);
+		
 	}
 }
 

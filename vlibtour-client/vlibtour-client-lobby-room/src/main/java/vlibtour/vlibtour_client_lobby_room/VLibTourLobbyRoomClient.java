@@ -58,7 +58,7 @@ public class VLibTourLobbyRoomClient {
 	/**
 	 * the group Id
 	 */
-	private int groupId;
+	private String groupId;
 
 	/**
 	 * default constructor of the RPC client that will create a group.
@@ -87,8 +87,9 @@ public class VLibTourLobbyRoomClient {
 		factory.setHost("localhost");
 		connection = factory.newConnection();
 		channel = connection.createChannel();
-		jsonRpcClient = new JsonRpcClient(channel, "vlib-tour-lobby", "lobby");
+		jsonRpcClient = new JsonRpcClient(channel,VLibTourLobbyService.EXCHANGE_NAME, "lobby");
 		client = (VLibTourLobbyService) jsonRpcClient.createProxy(VLibTourLobbyService.class);
+		groupId=tourId+'_'+userId;
 	}
 
 	/**
@@ -123,8 +124,9 @@ public class VLibTourLobbyRoomClient {
 		factory.setHost("localhost");
 		connection = factory.newConnection();
 		channel = connection.createChannel();
-		jsonRpcClient = new JsonRpcClient(channel, "vlib-tour-lobby", "lobby");
+		jsonRpcClient = new JsonRpcClient(channel,VLibTourLobbyService.EXCHANGE_NAME, "lobby");
 		client = (VLibTourLobbyService) jsonRpcClient.createProxy(VLibTourLobbyService.class);
+		this.groupId= groupId;
 	}
 
 	/**

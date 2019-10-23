@@ -90,6 +90,15 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 		String password = UUID.randomUUID().toString();
 		String url;
 		try {
+			new ProcessBuilder("rabbitmqctl", "add_vhost" , groupId).inheritIO().start().waitFor();
+			new ProcessBuilder("rabbitmqctl", "add_user" , userId, password).inheritIO().start().waitFor();
+			new ProcessBuilder("rabbitmqctl", "set_permissions" ,"-p", groupId, userId, ".*", ".*", ".*").inheritIO().start().waitFor();
+
+		} catch ( Exception e) {
+			url=e.toString();
+		} 		  
+		
+		try {
 		 url= "amqp://" + userId + ":" + password + "@" + "localhost" + ":" + factory.getPort() + "/" + groupId; 
 		} catch ( Exception e) {
 			url=e.toString();
@@ -101,6 +110,13 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 	public String joinAGroup(final String groupId, final String userId) {
 		String password =UUID.randomUUID().toString();
 		String url;
+		try {
+			new ProcessBuilder("rabbitmqctl", "add_user" , userId, password).inheritIO().start().waitFor();
+			new ProcessBuilder("rabbitmqctl", "set_permissions" ,"-p", groupId, userId, ".*", ".*", ".*").inheritIO().start().waitFor();
+
+		} catch ( Exception e) {
+			url=e.toString();
+		} 	
 		try {
 			 url= "amqp://" + userId + ":" + password + "@" + "localhost" + ":" + factory.getPort() + "/" + groupId; 
 		} catch ( Exception e) {
@@ -129,9 +145,6 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 	/**
 	 * calls for the termination of the main loop if not already done and then
 	 * closes the connection and the channel of this server.
-	 * 
-	 * @throws InAMQPPartException the exception thrown in case of a problem in the
-	 *                             AMQP part.
 	 * @throws IOException 
 	 * @throws TimeoutException 
 	 */
@@ -160,7 +173,7 @@ public class VLibTourLobbyServer implements Runnable, VLibTourLobbyService {
 	 *                   apply the strategy "fail fast").
 	 */
 	public static void main(final String[] args) throws Exception {
-		//VLibTourLobbyServer  rpcServer = new VLibTourLobbyServer ();
-		//rpcServer.run();
+		VLibTourLobbyServer  rpcServer = new VLibTourLobbyServer ();
+		rpcServer.run();
 	}
 }

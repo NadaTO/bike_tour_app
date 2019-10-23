@@ -142,7 +142,9 @@ public final class StationsRest {
 	/**
 	 * gets a station of a given city as a JSON text.
 	 * 
-	 * @param contract
+	 * @param contract_name
+	 *            the criterion for the selection.
+	 * @param name
 	 *            the criterion for the selection.
 	 * @return the station
 	 * @throws JAXBException

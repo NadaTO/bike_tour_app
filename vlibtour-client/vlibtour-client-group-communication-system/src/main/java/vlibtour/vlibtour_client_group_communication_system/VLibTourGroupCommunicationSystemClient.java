@@ -69,7 +69,6 @@ public class VLibTourGroupCommunicationSystemClient {
 		String userId = factory.getUsername();
 		String groupId = VLibTourLobbyService .computeGroupId(url);		
 		String tourId = groupId.split("_")[0];
-	
 		connection = factory.newConnection();
 	    channel = connection.createChannel(); 
 	    EXCHANGE_NAME= tourId ;
